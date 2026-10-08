@@ -14,7 +14,7 @@ import {
 } from './lessons'
 import type { ConfigTab } from './configuration'
 
-export type ChainSide = 'ECAS → OneApp' | 'OneApp → ECAS'
+export type ChainSide = 'cat → dog' | 'dog → cat'
 export type DiagramContext = {
   chapter: Chapter
   mode: Mode
@@ -71,9 +71,9 @@ function handshakeNode(step: Step): DiagramNode {
             : 'blue'
   const tag =
     step.direction === 'toServer'
-      ? 'Client → Server'
+      ? 'dog → cat'
       : step.direction === 'toClient'
-        ? 'Server → Client'
+        ? 'cat → dog'
         : 'ประมวลผลในระบบ'
   return node(step.id, step.title, step.description, tag, tone)
 }
@@ -130,15 +130,15 @@ export function buildDiagram(context: DiagramContext): Diagram {
   }
   if (chapter === 'certificates') {
     const selectedClient = certificate === 'clientCert'
-    const clientChain = mode === 'mTLS' && context.chainSide === 'OneApp → ECAS'
+    const clientChain = mode === 'mTLS' && context.chainSide === 'dog → cat'
     const issuer = selectedClient ? 'clientCA' : 'serverCA'
-    const owner = selectedClient ? 'Client' : 'Server'
-    const peer = clientChain ? 'Server' : 'Client'
+    const owner = selectedClient ? 'dog' : 'cat'
+    const peer = clientChain ? 'cat' : 'dog'
     const leaf = clientChain ? 'clientCert' : 'serverCert'
     const chainIssuer = clientChain ? 'clientCA' : 'serverCA'
     return {
       title: 'Certificates & CA · ตัวตนและสายโซ่ความเชื่อถือ',
-      summary: `Certificate Explorer: ${concepts[certificate].title} · Chain validation: ${clientChain ? 'Client → Server' : 'Server → Client'} (เลือกแยกกันได้)`,
+      summary: `Certificate Explorer: ${concepts[certificate].title} · Chain validation: ${clientChain ? 'dog → cat' : 'cat → dog'} (เลือกแยกกันได้)`,
       sections: [
         {
           id: 'certificate-identity',
@@ -174,7 +174,7 @@ export function buildDiagram(context: DiagramContext): Diagram {
         },
         {
           id: 'certificate-chain',
-          title: `Chain validation · ${clientChain ? 'Client → Server' : 'Server → Client'}`,
+          title: `Chain validation · ${clientChain ? 'dog → cat' : 'cat → dog'}`,
           note: 'ลูกศรแสดงขั้นตอนตรวจ chain; local Root CA ไม่ใช่ข้อมูลที่ต้องรับจาก peer',
           nodes: [
             node(
@@ -208,7 +208,7 @@ export function buildDiagram(context: DiagramContext): Diagram {
             node(
               'trusted',
               clientChain
-                ? 'Client Identity Verified'
+                ? 'dog Identity Verified'
                 : 'Server Certificate Trusted',
               'ผ่านการตรวจ certificate; proof of ownership และ handshake ยังต้องครบก่อนส่ง API',
               'Certificate ผ่าน',
@@ -222,47 +222,47 @@ export function buildDiagram(context: DiagramContext): Diagram {
   if (chapter === 'architecture') {
     return {
       title: 'Stores & Architecture · Who I am / Who I trust',
-      summary: `ตัวตนและ trust อยู่ในแต่ละระบบ · ${mode === 'mTLS' ? 'ตรวจตัวตนทั้งสองฝั่ง' : 'Client ตรวจตัวตน Server'}`,
+      summary: `ตัวตนและ trust อยู่ในแต่ละระบบ · ${mode === 'mTLS' ? 'ตรวจตัวตนทั้งสองฝั่ง' : 'dog ตรวจตัวตน cat'}`,
       sections: [
         {
-          id: 'oneapp-stores',
-          title: 'Client · local material',
-          note: 'สองกล่องเป็นข้อมูลใน Client ไม่ใช่ packet ที่ส่งข้ามระบบ',
+          id: 'dog-stores',
+          title: 'dog · local material',
+          note: 'สองกล่องเป็นข้อมูลใน dog ไม่ใช่ packet ที่ส่งข้ามระบบ',
           linked: false,
           nodes: [
             node(
-              'oneapp-identity',
-              'Client Key Store',
+              'dog-identity',
+              'dog Key Store',
               `Client certificate + Private Key + chain · ${mode === 'mTLS' ? 'ใช้ตอบคำขอ client identity' : 'ไม่ใช้ client identity ใน TLS'}`,
-              'Private Key อยู่ใน Client',
+              'Private Key อยู่ใน dog',
               'blue',
             ),
             node(
-              'oneapp-trust',
-              'Client Trust Store',
-              'เก็บ trusted Root CA สำหรับตรวจ chain ของ Server',
+              'dog-trust',
+              'dog Trust Store',
+              'เก็บ trusted Root CA สำหรับตรวจ chain ของ cat',
               'Local trust anchor',
               'green',
             ),
           ],
         },
         {
-          id: 'ecas-stores',
-          title: 'Server · local material',
+          id: 'cat-stores',
+          title: 'cat · local material',
           note: 'Private Keys ไม่เดินทางข้ามระบบ',
           linked: false,
           nodes: [
             node(
-              'ecas-identity',
-              'Server Key Store',
-              'Server certificate + Private Key + intermediate chain สำหรับพิสูจน์ตัวตน Server',
-              'Private Key อยู่ใน Server',
+              'cat-identity',
+              'cat Key Store',
+              'Server certificate + Private Key + intermediate chain สำหรับพิสูจน์ตัวตน cat',
+              'Private Key อยู่ใน cat',
               'purple',
             ),
             node(
-              'ecas-trust',
-              'Server Trust Store',
-              `Trusted Root CA สำหรับ client chain · ${mode === 'mTLS' ? 'ใช้ตรวจ Client' : 'ไม่ตรวจ Client Certificate ใน TLS'}`,
+              'cat-trust',
+              'cat Trust Store',
+              `Trusted Root CA สำหรับ client chain · ${mode === 'mTLS' ? 'ใช้ตรวจ dog' : 'ไม่ตรวจ Client Certificate ใน TLS'}`,
               'Local client trust anchor',
               'green',
             ),
@@ -275,8 +275,8 @@ export function buildDiagram(context: DiagramContext): Diagram {
           nodes: [
             node(
               'server-identity',
-              'Client ตรวจ Server',
-              'ตรวจ server chain กับ Client Trust Store และตรวจ hostname/SAN',
+              'dog ตรวจ cat',
+              'ตรวจ server chain กับ dog Trust Store และตรวจ hostname/SAN',
               'Server authentication',
               'blue',
             ),
@@ -284,8 +284,8 @@ export function buildDiagram(context: DiagramContext): Diagram {
               ? [
                   node(
                     'client-identity',
-                    'Server ตรวจ Client',
-                    'ตรวจ client chain กับ Server Trust Store และตรวจ proof of ownership',
+                    'cat ตรวจ dog',
+                    'ตรวจ client chain กับ cat Trust Store และตรวจ proof of ownership',
                     'Client authentication',
                     'purple',
                   ),
@@ -307,20 +307,20 @@ export function buildDiagram(context: DiagramContext): Diagram {
     'SSL Bundle': [
       {
         id: 'bundle-stores',
-        title: 'Material ที่โหลดใน Client',
+        title: 'Material ที่โหลดใน dog',
         note: 'อ่าน stores เพื่อเตรียม identity และ trust ในระบบ',
         linked: false,
         nodes: [
           node(
             'bundle-key',
-            'oneapp-keystore.p12',
-            `Client identity + Private Key + chain · ${mode === 'TLS' ? 'ไม่ต้องใช้ client identity ใน TLS' : 'ใช้เมื่อ Server ขอ Client Certificate'}`,
+            'dog-keystore.p12',
+            `dog identity + Private Key + chain · ${mode === 'TLS' ? 'ไม่ต้องใช้ client identity ใน TLS' : 'ใช้เมื่อ cat ขอ Client Certificate'}`,
             'Key Store · local',
             'blue',
           ),
           node(
             'bundle-trust',
-            'oneapp-truststore.p12',
+            'dog-truststore.p12',
             'Trusted Root CA สำหรับตรวจ Server certificate chain',
             'Trust Store · local',
             'green',
@@ -334,8 +334,8 @@ export function buildDiagram(context: DiagramContext): Diagram {
         nodes: [
           node(
             'bundle',
-            'SSL Bundle: ecas',
-            'spring.ssl.bundle.jks.ecas รวม material จาก Key Store และ Trust Store',
+            'SSL Bundle: cat',
+            'spring.ssl.bundle.jks.cat รวม material จาก Key Store และ Trust Store',
             'application.yml',
             'gold',
           ),
@@ -349,7 +349,7 @@ export function buildDiagram(context: DiagramContext): Diagram {
           node(
             'attachment',
             'ผูกกับ HTTP Client',
-            'RestClient ต้องนำ bundle ไปใช้ด้วย ssl.fromBundle("ecas") ก่อนเรียก Server',
+            'RestClient ต้องนำ bundle ไปใช้ด้วย ssl.fromBundle("cat") ก่อนเรียก cat',
             'ดูแท็บ HTTP Client',
             'purple',
           ),
@@ -359,27 +359,27 @@ export function buildDiagram(context: DiagramContext): Diagram {
     'HTTP Client': [
       {
         id: 'http-client-flow',
-        title: 'HTTPS ขาออก · Client → Server',
+        title: 'HTTPS ขาออก · dog → cat',
         note: 'RestClient ใช้ bundle ที่กำหนดไว้จริง',
         nodes: [
           node(
             'http-bundle',
-            'SSL Bundle: ecas',
-            'โหลด identity และ trusted CA จาก bundle ชื่อ ecas',
+            'SSL Bundle: cat',
+            'โหลด identity และ trusted CA จาก bundle ชื่อ cat',
             'SSL material',
             'gold',
           ),
           node(
             'http-apply',
-            'ssl.fromBundle("ecas")',
+            'ssl.fromBundle("cat")',
             'RestClient.Builder.apply(...) ผูก SSL configuration เข้ากับ client',
             'RestClientSsl',
             'blue',
           ),
           node(
             'http-client',
-            'RestClient → Server',
-            `เชื่อมต่อ https://ecas.example.internal ด้วย ${mode}; API ส่งหลัง handshake สำเร็จ`,
+            'RestClient → cat',
+            `เชื่อมต่อ https://cat.example.internal ด้วย ${mode}; API ส่งหลัง handshake สำเร็จ`,
             'Outbound HTTPS',
             'green',
           ),
@@ -408,8 +408,8 @@ export function buildDiagram(context: DiagramContext): Diagram {
           ),
           node(
             'default-client',
-            'Client ที่ใช้ default context',
-            `ใช้ context นี้ทำ ${mode} handshake ไป Server; client ที่สร้าง context เองไม่รับการตั้งค่านี้โดยอัตโนมัติ`,
+            'dog ที่ใช้ default context',
+            `ใช้ context นี้ทำ ${mode} handshake ไป cat; client ที่สร้าง context เองไม่รับการตั้งค่านี้โดยอัตโนมัติ`,
             'Outbound HTTPS',
             'green',
           ),
@@ -419,42 +419,42 @@ export function buildDiagram(context: DiagramContext): Diagram {
     'Inbound HTTPS': [
       {
         id: 'inbound-material',
-        title: 'Server identity สำหรับ HTTPS ขาเข้าของแอปฝั่ง Client',
-        note: 'ใช้ Server Certificate แยกจาก Client Certificate สำหรับเรียก Server',
+        title: 'Server identity สำหรับ HTTPS ขาเข้าของ dog',
+        note: 'ใช้ Server Certificate แยกจาก Client Certificate สำหรับเรียก cat',
         linked: false,
         nodes: [
           node(
             'inbound-store',
             'Key Store สำหรับ HTTPS ขาเข้า',
-            'oneapp-server-keystore.p12 เก็บ serverAuth certificate + Private Key + chain',
-            'Private Key อยู่ใน Client',
+            'dog-server-keystore.p12 เก็บ serverAuth certificate + Private Key + chain',
+            'Private Key อยู่ใน dog',
             'blue',
           ),
         ],
       },
       {
         id: 'inbound-flow',
-        title: 'HTTPS ขาเข้า · ผู้เรียก → Client',
+        title: 'HTTPS ขาเข้า · ผู้เรียก → dog',
         note: 'ตัวอย่างตั้ง HTTPS ขาเข้า; ไม่เปิด inbound mTLS และไม่ตั้ง outbound client',
         nodes: [
           node(
             'incoming-client',
             'ผู้เรียก HTTPS',
-            'ผู้เรียกตรวจ Server Certificate ของ Client กับ trust ที่ผู้เรียกกำหนด',
-            'Caller → Client',
+            'ผู้เรียกตรวจ Server Certificate ของ dog กับ trust ที่ผู้เรียกกำหนด',
+            'Caller → dog',
             'purple',
           ),
           node(
-            'oneapp-server',
-            'HTTPS ขาเข้าของแอปฝั่ง Client :8443',
-            'แอปฝั่ง Client รับบท HTTPS Server ขาเข้า; server.ssl ตั้ง listener และ server identity',
+            'dog-server',
+            'HTTPS ขาเข้าของแอปฝั่ง dog :8443',
+            'แอปฝั่ง dog รับบท HTTPS Server ขาเข้า; server.ssl ตั้ง listener และ server identity',
             'Inbound HTTPS',
             'blue',
           ),
           node(
             'inbound-api',
-            'Client API',
-            'รับ API ผ่าน secure connection ขาเข้า; การเรียก Server ขาออกต้องตั้ง HTTP Client แยก',
+            'dog API',
+            'รับ API ผ่าน secure connection ขาเข้า; การเรียก cat ขาออกต้องตั้ง HTTP Client แยก',
             'Encrypted request/response',
             'green',
           ),

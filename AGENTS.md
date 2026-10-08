@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This frontend-only Thai learning app illustrates OneApp ↔ ECAS TLS/mTLS using React 19, TypeScript, and Vite. `src/App.tsx` assembles the workspace; `src/components/` contains chapters and shared UI. Keep lesson fixtures and Java examples in `src/data/`, deterministic protocol logic in `src/lib/handshake.ts`, and playback lifecycle in `src/hooks/useHandshake.ts`. Global styling lives in `src/styles.css`; static assets belong in `public/`. Tests live in `tests/`; browser verification notes and screenshots are under `docs/`. Treat `dist/` as generated output.
+This frontend-only Thai learning app illustrates dog ↔ cat TLS/mTLS using React 19, TypeScript, and Vite. `src/App.tsx` assembles the workspace; `src/components/` contains chapters and shared UI. Keep lesson fixtures and Java examples in `src/data/`, deterministic protocol logic in `src/lib/handshake.ts`, and playback lifecycle in `src/hooks/useHandshake.ts`. Global styling lives in `src/styles.css`; static assets belong in `public/`. Tests live in `tests/`; browser verification notes and screenshots are under `docs/`. Treat `dist/` as generated output.
 
 ## Build, Test, and Development Commands
 
@@ -29,4 +29,4 @@ This checkout has no Git metadata, so existing commit conventions cannot be veri
 
 ## Security & Configuration
 
-Keep certificates, hostnames, and passwords fictional. Never commit private keys or real credentials. Preserve the documented simulation boundaries: this app performs no real TLS validation or ECAS requests. Keep bundled assets local and generated files out of source changes.
+Keep certificates, hostnames, and passwords fictional. Never commit private keys or real credentials. Preserve the documented simulation boundaries: this app performs no real TLS validation or cat requests. Keep bundled assets local and generated files out of source changes.

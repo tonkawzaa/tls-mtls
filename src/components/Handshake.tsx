@@ -63,13 +63,13 @@ export function ConnectionDiagram({
       ? steps.findIndex((s) => s.phase === 'chain')
       : steps.findIndex((s) => s.phase === 'serverValidate')
   const clientCheck = steps.findIndex((s) => s.phase === 'clientValidate')
-  const ecTrusted =
+  const catTrusted =
     state.index > serverCheck &&
     (!failure ||
       failure.field.startsWith('client') ||
       failure.field.startsWith('private') ||
       failure.field === 'keyMatches')
-  const oneTrusted = mode === 'mTLS' && state.index > clientCheck && !failure
+  const dogTrusted = mode === 'mTLS' && state.index > clientCheck && !failure
   const certificate = displayed.artifact?.includes('.crt')
   const packetStyle = {
     '--packet-position': `${position}%`,
@@ -82,11 +82,11 @@ export function ConnectionDiagram({
     >
       <div className="verification-caption">
         <span>
-          <ShieldCheck size={18} /> Client verifies Server
+          <ShieldCheck size={18} /> dog verifies cat
         </span>
         {mode === 'mTLS' ? (
           <span>
-            <ShieldCheck size={18} /> Server verifies Client
+            <ShieldCheck size={18} /> cat verifies dog
           </span>
         ) : null}
       </div>
@@ -147,53 +147,53 @@ export function ConnectionDiagram({
           className="wire"
         />
       </svg>
-      <div className="server-node oneapp">
+      <div className="server-node dog">
         <button
           className="server-glyph"
           type="button"
           onClick={() => inspect(mode === 'mTLS' ? 'keyStore' : 'trustStore')}
-          aria-label="Inspect Client"
+          aria-label="Inspect dog"
         >
           <Server strokeWidth={1.6} />
         </button>
-        <strong>Client</strong>
+        <strong>dog</strong>
         <span>HTTPS Client</span>
-        {ecTrusted ? (
+        {catTrusted ? (
           <span className="node-trust">
-            <Check size={14} /> Server Trusted
+            <Check size={14} /> cat Trusted
           </span>
         ) : null}
         <ConceptNode
           id="trustStore"
           inspect={inspect}
           label="truststore.p12"
-          detail="Server Root CA"
+          detail="cat Root CA"
           className={
             ['trust', 'chain', 'serverValidate'].includes(current.phase) ? 'active-node' : ''
           }
         />
       </div>
-      <div className="server-node ecas">
+      <div className="server-node cat">
         <button
           className="server-glyph"
           type="button"
           onClick={() => inspect('serverCert')}
-          aria-label="Inspect Server"
+          aria-label="Inspect cat"
         >
           <Server strokeWidth={1.6} />
         </button>
-        <strong>Server</strong>
+        <strong>cat</strong>
         <span>HTTPS Server</span>
-        {oneTrusted ? (
+        {dogTrusted ? (
           <span className="node-trust">
-            <Check size={14} /> Client Trusted
+            <Check size={14} /> dog Trusted
           </span>
         ) : null}
         {mode === 'mTLS' ? (
           <ConceptNode
-            id="ecasTrustStore"
+            id="catTrustStore"
             inspect={inspect}
-            label="Server Trust Store"
+            label="cat Trust Store"
             detail="Trusted Client CA"
             className={current.phase === 'clientValidate' ? 'active-node' : ''}
           />
@@ -231,7 +231,7 @@ export function ConnectionDiagram({
             <FileBadge size={certificate ? 36 : 23} />
             <strong>{displayed.artifact}</strong>
           </button>
-          <small>{displayed.direction === 'toServer' ? 'Client → Server' : 'Server → Client'}</small>
+          <small>{displayed.direction === 'toServer' ? 'dog → cat' : 'cat → dog'}</small>
         </motion.div>
       ) : null}
       {failure ? (
@@ -242,7 +242,7 @@ export function ConnectionDiagram({
         </div>
       ) : null}
       {state.status === 'idle' ? (
-        <div className="diagram-ready">พร้อมเชื่อมต่อ · กด Play หรือ Connect to Server</div>
+        <div className="diagram-ready">พร้อมเชื่อมต่อ · กด Play หรือ Connect to cat</div>
       ) : null}
     </div>
   )
@@ -326,19 +326,19 @@ function StepInspector({
       <h2>{complete ? 'API Response Received' : current.title}</h2>
       <p>
         {complete
-          ? 'Client และ Server สื่อสารผ่าน encrypted connection สำเร็จแล้ว'
+          ? 'dog และ cat สื่อสารผ่าน encrypted connection สำเร็จแล้ว'
           : current.description}
       </p>
       {current.concept ? (
         <ConceptNode id={current.concept} inspect={inspect} detail="คลิกเพื่อดูคำอธิบาย" />
       ) : (
-        <ConceptNode id="serverCert" inspect={inspect} detail="Server identity · Certificate" />
+        <ConceptNode id="serverCert" inspect={inspect} detail="cat identity · Certificate" />
       )}
       {current.phase === 'serverCert' || state.status === 'idle' ? (
         <dl className="preview-fields">
           <div>
             <dt>Subject</dt>
-            <dd>ecas.example.internal</dd>
+            <dd>cat.example.internal</dd>
           </div>
           <div>
             <dt>Issuer</dt>
@@ -351,8 +351,8 @@ function StepInspector({
           <strong>นึกภาพง่าย ๆ</strong>
           <p>
             {mode === 'TLS'
-              ? 'Client รับบัตรของ Server แล้วตรวจว่าผู้ออกบัตรอยู่ในรายชื่อที่เชื่อถือหรือไม่'
-              : 'Client ตรวจบัตรของ Server และ Server ก็ตรวจบัตรของ Client ด้วย'}
+              ? 'dog รับบัตรของ cat แล้วตรวจว่าผู้ออกบัตรอยู่ในรายชื่อที่เชื่อถือหรือไม่'
+              : 'dog ตรวจบัตรของ cat และ cat ก็ตรวจบัตรของ dog ด้วย'}
           </p>
         </Note>
       ) : (
@@ -414,7 +414,7 @@ export function HandshakeChapter({
             ? 'Conceptual flow · ลำดับย่อเพื่อการเรียนรู้'
             : `Full TLS ${protocol} certificate handshake · ${protocol === '1.2' ? 'ECDHE' : 'ECDHE + HKDF'}`}
         </span>
-        <span>ตัวอย่างจำลอง · ไม่มีการเรียก Server จริง</span>
+        <span>ตัวอย่างจำลอง · ไม่มีการเรียก cat จริง</span>
       </div>
       <ApplicationFlow controller={controller} mode={mode} />
       <Summary inspect={inspect} />
@@ -450,17 +450,17 @@ function ApplicationFlow({ controller, mode }: { controller: HandshakeController
         </div>
       </div>
       <div className={`request-flow ${secure ? 'request-enabled' : ''}`}>
-        <span className="blue">Client</span>
+        <span className="blue">dog</span>
         <span>
-          <ArrowRight size={16} /> POST /ecas/api/... <ArrowLeft size={16} /> HTTPS Response
+          <ArrowRight size={16} /> POST /cat/api/... <ArrowLeft size={16} /> HTTPS Response
         </span>
-        <span className="purple">Server</span>
+        <span className="purple">cat</span>
       </div>
       <Note tone={secure ? 'green' : 'slate'}>
         {secure ? (
           <>
             <strong>Secure {mode} Connection Established</strong> — request/response ใช้ application
-            traffic keys; Server ตรวจสิทธิ์และประมวลผล API ใน Application Layer
+            traffic keys; cat ตรวจสิทธิ์และประมวลผล API ใน Application Layer
           </>
         ) : (
           'API ยังไม่ถูกส่ง · ต้องสร้าง Secure Connection สำเร็จก่อน'
@@ -476,20 +476,20 @@ function Summary({ inspect }: { inspect: Inspect }) {
       <div className="summary-comparison">
         <div>
           <strong>TLS</strong>
-          <span className="blue">Client</span>
+          <span className="blue">dog</span>
           <ArrowRight />
-          <span className="purple">Server</span>
-          <p>Client verifies Server</p>
+          <span className="purple">cat</span>
+          <p>dog verifies cat</p>
         </div>
         <div>
           <strong>mTLS</strong>
-          <span className="blue">Client</span>
+          <span className="blue">dog</span>
           <span className="mutual-arrows">
             <ArrowRight />
             <ArrowLeft />
           </span>
-          <span className="purple">Server</span>
-          <p>Client verifies Server + Server verifies Client</p>
+          <span className="purple">cat</span>
+          <p>dog verifies cat + cat verifies dog</p>
         </div>
       </div>
       <div className="mnemonics">

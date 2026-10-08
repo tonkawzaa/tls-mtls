@@ -1,6 +1,6 @@
-# Client ↔ Server · TLS / mTLS Learning
+# dog ↔ cat · TLS / mTLS Learning
 
-ชื่อใน UI ใช้ Client / Server; ตัวอย่างไฟล์ hostname และ config ยังคงใช้ oneapp / ecas เพื่อให้ตรงกับข้อมูล certificate ตัวอย่างเดิม
+ชื่อระบบใช้ dog (Client) / cat (Server) ทั้งใน UI, certificate, hostname และตัวอย่าง config
 เว็บเรียนรู้ภาษาไทยแบบ frontend-only สำหรับ Developer, Infrastructure, Security, Solution Architect และ QA ใช้ React + TypeScript + Vite, Tailwind CSS, Framer Motion, Lucide และ SVG
 
 ## Run
@@ -23,7 +23,7 @@ npm test
 
 ## Demo guide
 
-1. เริ่มใน Handshake: TLS + Beginner กด Connect to Server หรือ Play แล้วใช้ Pause, Previous, Next, Reset เพื่อดูรายละเอียด
+1. เริ่มใน Handshake: TLS + Beginner กด Connect to cat หรือ Play แล้วใช้ Pause, Previous, Next, Reset เพื่อดูรายละเอียด
 2. เปลี่ยนเป็น mTLS เพื่อเห็น Certificate สองทาง และ proof of ownership โดยไม่มี Private Key เดินทางออกจากเจ้าของ
 3. Advanced แยก TLS 1.2 แบบ ECDHE กับ TLS 1.3 ตาม full certificate handshake; Beginner ใช้ conceptual flow 10/14 ขั้น
 4. Certificates & CA: คลิก field, CA หรือ Certificate และ Play validation ทั้ง server/client chain

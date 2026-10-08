@@ -723,11 +723,11 @@ main:focus {
   font-size: 14px;
   z-index: 2;
 }
-.server-node.oneapp {
+.server-node.dog {
   left: 14%;
   color: var(--blue);
 }
-.server-node.ecas {
+.server-node.cat {
   left: 86%;
   color: var(--purple);
 }
@@ -1633,7 +1633,7 @@ main:focus {
   border-radius: 8px;
   min-width: 0;
 }
-.system-box.ecas-box {
+.system-box.cat-box {
   border-color: var(--purple);
 }
 .system-box > header {
@@ -1644,7 +1644,7 @@ main:focus {
   color: var(--blue);
   padding: 0 4px;
 }
-.system-box.ecas-box > header {
+.system-box.cat-box > header {
   color: var(--purple);
 }
 .system-box > header > svg {
@@ -1983,7 +1983,7 @@ main:focus {
   border-color: var(--blue);
   box-shadow: 0 0 0 1px var(--blue);
 }
-.client-to-ecas {
+.dog-to-cat {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3098,8 +3098,8 @@ main:focus {
     left: 24% !important;
     gap: 3px;
   }
-  .server-node.ecas,
-  .failure-grid .server-node.ecas {
+  .server-node.cat,
+  .failure-grid .server-node.cat {
     top: 355px;
   }
   .server-glyph svg,
@@ -3541,7 +3541,7 @@ main:focus {
   .config-store .concept-node {
     font-size: 12px;
   }
-  .client-to-ecas {
+  .dog-to-cat {
     font-size: 11px;
   }
   .source-links {

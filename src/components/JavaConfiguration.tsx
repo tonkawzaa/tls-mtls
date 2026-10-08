@@ -82,12 +82,12 @@ export function JavaChapter({
                 <Server size={24} /> Inbound HTTPS
               </h2>
               <p>
-                แอปฝั่ง Client รับบท HTTPS Server สำหรับผู้ที่เรียกเข้ามา ต้องมี
+                แอปฝั่ง dog รับบท HTTPS Server สำหรับผู้ที่เรียกเข้ามา ต้องมี
                 Server Certificate และ Private Key สำหรับ HTTPS ขาเข้า
               </p>
               <Note>
-                ใช้ <code>oneapp-server-keystore.p12</code> ที่มี serverAuth
-                certificate แยกจาก Client Certificate สำหรับเรียก Server
+                ใช้ <code>dog-server-keystore.p12</code> ที่มี serverAuth
+                certificate แยกจาก Client Certificate สำหรับเรียก cat
               </Note>
               <p>
                 ตัวอย่างนี้ตั้ง HTTPS ขาเข้าเท่านั้น ไม่ได้เปิด mTLS
@@ -100,7 +100,7 @@ export function JavaChapter({
                 className={`panel config-store ${selected === 'key' ? 'selected-store' : ''}`}
               >
                 <h2>Key Store · Who I Am</h2>
-                <p>oneapp-keystore.p12</p>
+                <p>dog-keystore.p12</p>
                 <ConceptNode id="clientCert" inspect={inspect} />
                 <ConceptNode id="clientPrivate" inspect={inspect} />
                 <ConceptNode
@@ -108,16 +108,16 @@ export function JavaChapter({
                   inspect={inspect}
                   label="Intermediate CA chain"
                 />
-                <div className="client-to-ecas">
-                  <span className="blue">Client HTTP Client</span>
+                <div className="dog-to-cat">
+                  <span className="blue">dog HTTP Client</span>
                   <ArrowRight size={20} />
-                  <span className="purple">Server</span>
+                  <span className="purple">cat</span>
                 </div>
                 <Note icon={KeyRound}>
-                  Client ใช้ Key Store เมื่อ Server ขอ Client Certificate ·
+                  dog ใช้ Key Store เมื่อ cat ขอ Client Certificate ·
                   Private Key ใช้ลงลายมือชื่อและไม่ถูกส่ง
                   {mode === 'TLS' ? (
-                    <p>ใน TLS แบบ server-only ไม่ต้องใช้ Client Key Store</p>
+                    <p>ใน TLS แบบ server-only ไม่ต้องใช้ dog Key Store</p>
                   ) : null}
                 </Note>
               </section>
@@ -129,22 +129,22 @@ export function JavaChapter({
                 <ConceptNode
                   id="root"
                   inspect={inspect}
-                  label="Server Root CA"
+                  label="cat Root CA"
                   detail="Corporate Root CA · local trust anchor"
                 />
                 <Note tone="green">
-                  Client ใช้ Trust Store ตรวจ Certificate chain ของ Server
+                  dog ใช้ Trust Store ตรวจ Certificate chain ของ cat
                 </Note>
               </section>
             </>
           )}
           <Note>
             <strong>server.ssl = HTTPS ขาเข้า</strong>
-            <p>การเรียก Server ขาออก ต้องผูก SSL Bundle กับ HTTP Client</p>
+            <p>การเรียก cat ขาออก ต้องผูก SSL Bundle กับ HTTP Client</p>
           </Note>
           {tab === 'HTTP Client' ? (
             <Note tone="green">
-              <code>ssl.fromBundle("ecas")</code>
+              <code>ssl.fromBundle("cat")</code>
               <p>
                 เชื่อม configuration ใน SSL Bundle กับ RestClient จริง
                 ไม่ใช่เพียงประกาศ path ใน YAML
@@ -165,7 +165,7 @@ export function JavaChapter({
             <Note tone="slate">
               KeyManager เลือก identity · TrustManager ตรวจ peer chain ·
               SSLContext ผูก material กับ TLS engine; custom{' '}
-              <code>application.ecas.*</code> ต้องมีโค้ดอ่านและนำไปใช้
+              <code>application.cat.*</code> ต้องมีโค้ดอ่านและนำไปใช้
             </Note>
           ) : null}
         </aside>

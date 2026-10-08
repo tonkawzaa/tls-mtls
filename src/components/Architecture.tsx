@@ -25,34 +25,34 @@ export function ArchitectureChapter({
           <div>
             <ConceptNode id="clientCA" inspect={inspect} />
             <span>
-              <ArrowDown size={18} /> ออก Client Certificate ให้ Client
+              <ArrowDown size={18} /> ออก Client Certificate ให้ dog
             </span>
           </div>
           <div>
             <ConceptNode id="serverCA" inspect={inspect} />
             <span>
-              <ArrowDown size={18} /> ออก Server Certificate ให้ Server
+              <ArrowDown size={18} /> ออก Server Certificate ให้ cat
             </span>
           </div>
         </div>
         <div className="architecture-systems">
-          <div className="system-box oneapp-box">
+          <div className="system-box dog-box">
             <header>
               <Server />
               <div>
-                <h2>Client</h2>
+                <h2>dog</h2>
                 <span>Spring Boot · HTTPS Client</span>
               </div>
             </header>
             <div className={`identity-group ${mode === 'TLS' ? 'identity-unused' : ''}`}>
               <ConceptNode id="keyStore" inspect={inspect} />
               <div className="store-contents">
-                <ConceptNode id="clientCert" inspect={inspect} detail="Client identity" />
+                <ConceptNode id="clientCert" inspect={inspect} detail="dog identity" />
                 <ConceptNode
                   id="clientPrivate"
                   inspect={inspect}
-                  label="oneapp-private.key"
-                  detail="Private Key · อยู่ใน Client"
+                  label="dog-private.key"
+                  detail="Private Key · อยู่ใน dog"
                 />
                 <ConceptNode id="clientCA" inspect={inspect} label="client-intermediate-ca.crt" />
               </div>
@@ -65,7 +65,7 @@ export function ArchitectureChapter({
               <ConceptNode
                 id="root"
                 inspect={inspect}
-                label="Server Root CA"
+                label="cat Root CA"
                 detail="Corporate Root CA · Trust anchor"
               />
             </div>
@@ -87,45 +87,45 @@ export function ArchitectureChapter({
             </div>
             <div className="architecture-verifications">
               <Note tone="green" icon={ShieldCheck}>
-                <strong>Client Trust Store</strong>
+                <strong>dog Trust Store</strong>
                 <p>verifies Server Certificate</p>
               </Note>
               {mode === 'mTLS' ? (
                 <Note tone="green" icon={ShieldCheck}>
-                  <strong>Server Trust Store</strong>
+                  <strong>cat Trust Store</strong>
                   <p>verifies Client Certificate</p>
                 </Note>
               ) : null}
             </div>
             <span className="demo-caption">Architecture หลัง handshake สำเร็จ</span>
           </div>
-          <div className="system-box ecas-box">
+          <div className="system-box cat-box">
             <header>
               <Server />
               <div>
-                <h2>Server</h2>
+                <h2>cat</h2>
                 <span>HTTPS Server</span>
               </div>
             </header>
             <div className="identity-group">
-              <ConceptNode id="ecasKeyStore" inspect={inspect} />
+              <ConceptNode id="catKeyStore" inspect={inspect} />
               <div className="store-contents">
-                <ConceptNode id="serverCert" inspect={inspect} detail="Server identity" />
+                <ConceptNode id="serverCert" inspect={inspect} detail="cat identity" />
                 <ConceptNode
                   id="serverPrivate"
                   inspect={inspect}
-                  label="ecas-private.key"
-                  detail="Private Key · อยู่ใน Server"
+                  label="cat-private.key"
+                  detail="Private Key · อยู่ใน cat"
                 />
                 <ConceptNode id="serverCA" inspect={inspect} label="server-intermediate-ca.crt" />
               </div>
             </div>
             <div className={`trust-group ${mode === 'TLS' ? 'identity-unused' : ''}`}>
-              <ConceptNode id="ecasTrustStore" inspect={inspect} />
+              <ConceptNode id="catTrustStore" inspect={inspect} />
               <ConceptNode
                 id="root"
                 inspect={inspect}
-                label="Trusted Client Root CA"
+                label="Trusted dog Root CA"
                 detail="Anchor สำหรับ Company Client CA"
               />
               {mode === 'TLS' ? (
@@ -144,7 +144,7 @@ export function ArchitectureChapter({
           <ConceptNode
             id="keyStore"
             inspect={inspect}
-            detail="oneapp-client.crt + private key + client CA chain"
+            detail="dog-client.crt + private key + client CA chain"
           />
           {level === 'Advanced' ? (
             <code>PrivateKeyEntry → private key + certificate chain</code>
@@ -160,7 +160,7 @@ export function ArchitectureChapter({
           <ConceptNode
             id="trustStore"
             inspect={inspect}
-            detail="Corporate Root CA สำหรับตรวจ Server"
+            detail="Corporate Root CA สำหรับตรวจ cat"
           />
           {level === 'Advanced' ? (
             <code>trustedCertEntry → trusted CA certificate</code>
@@ -190,7 +190,7 @@ export function ArchitectureChapter({
         </div>
         {mode === 'mTLS' ? (
           <div>
-            <ConceptNode id="ecasTrustStore" inspect={inspect} />
+            <ConceptNode id="catTrustStore" inspect={inspect} />
             <span className="verification-link">
               verifies <ArrowRight />
             </span>

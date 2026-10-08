@@ -109,15 +109,15 @@ export function CertificatesChapter({
             value={certificate}
             onChange={setCertificate}
             labels={{
-              serverCert: 'ecas-server.crt',
-              clientCert: 'oneapp-client.crt',
+              serverCert: 'cat-server.crt',
+              clientCert: 'dog-client.crt',
             }}
           />
           <div className="certificate-tab-label">
             <FileBadge size={17} />
             {certificate === 'serverCert'
-              ? 'ecas-server.crt'
-              : 'oneapp-client.crt'}
+              ? 'cat-server.crt'
+              : 'dog-client.crt'}
           </div>
           <div className="certificate-fields">
             {certificateFields.map((name) => (
@@ -159,10 +159,10 @@ export function CertificatesChapter({
             <ConceptNode
               id="clientPrivate"
               inspect={inspect}
-              detail="Private Key อยู่ใน Client เท่านั้น"
+              detail="Private Key อยู่ใน dog เท่านั้น"
             />
             <p>
-              Private Key ใช้พิสูจน์ ownership ส่งเฉพาะลายมือชื่อให้ Server ตรวจ
+              Private Key ใช้พิสูจน์ ownership ส่งเฉพาะลายมือชื่อให้ cat ตรวจ
             </p>
           </div>
         </div>
@@ -195,7 +195,7 @@ function ChainValidation({
     setPlayVersion(value ? chainPauseVersion : null)
   }
   const reduced = useReducedMotion()
-  const client = mode === 'mTLS' && side === 'OneApp → ECAS'
+  const client = mode === 'mTLS' && side === 'dog → cat'
   useEffect(() => {
     if (!playing) return
     const timer = window.setTimeout(() => {
@@ -205,7 +205,7 @@ function ChainValidation({
     return () => clearTimeout(timer)
   }, [playing, stage])
   const nodes = client
-    ? (['clientCert', 'clientCA', 'root', 'ecasTrustStore'] as const)
+    ? (['clientCert', 'clientCA', 'root', 'catTrustStore'] as const)
     : (['serverCert', 'serverCA', 'root', 'trustStore'] as const)
   return (
     <div className="chain-validation">
@@ -214,11 +214,7 @@ function ChainValidation({
         {mode === 'mTLS' ? (
           <Segment
             label="Chain direction"
-            options={['ECAS → OneApp', 'OneApp → ECAS']}
-            labels={{
-              'ECAS → OneApp': 'Server → Client',
-              'OneApp → ECAS': 'Client → Server',
-            }}
+            options={['cat → dog', 'dog → cat']}
             value={side}
             onChange={(value) => {
               setSide(value)
@@ -242,8 +238,8 @@ function ChainValidation({
                   ? 'Root CA'
                   : i === 3
                     ? client
-                      ? 'Server Trust Store'
-                      : 'Client Trust Store'
+                      ? 'cat Trust Store'
+                      : 'dog Trust Store'
                     : undefined
               }
               detail={
@@ -294,15 +290,15 @@ function ChainValidation({
         >
           <ShieldCheck size={19} />
           {client
-            ? 'Client Identity Verified'
+            ? 'dog Identity Verified'
             : 'Server Certificate Trusted'}{' '}
           <Check size={17} />
         </motion.div>
       ) : (
         <p className="chain-explanation">
           {client
-            ? 'Client ส่ง Client Certificate + Client CA chain · Server มี trusted root ใน Trust Store'
-            : 'Server ส่ง leaf + Intermediate CA · Client มี Root CA ใน Trust Store'}
+            ? 'dog ส่ง Client Certificate + Client CA chain · cat มี trusted root ใน Trust Store'
+            : 'cat ส่ง leaf + Intermediate CA · dog มี Root CA ใน Trust Store'}
         </p>
       )}
       {level === 'Advanced' ? (

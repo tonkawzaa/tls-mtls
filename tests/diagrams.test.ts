@@ -8,7 +8,7 @@ const base: DiagramContext = {
   level: 'Beginner',
   protocol: '1.3',
   certificate: 'serverCert',
-  chainSide: 'ECAS → OneApp',
+  chainSide: 'cat → dog',
   configTab: 'SSL Bundle',
   conditions: validConditions,
 }
@@ -101,19 +101,19 @@ describe('diagram content', () => {
       chapter: 'certificates',
       certificate: 'clientCert',
     })
-    expect(server.sections[0].title).toContain('Client')
+    expect(server.sections[0].title).toContain('dog')
     expect(
       server.sections[1].nodes.find((node) => node.id === 'local-root')?.title,
-    ).toBe('Client Trust Store')
+    ).toBe('dog Trust Store')
     const client = buildDiagram({
       ...base,
       chapter: 'certificates',
       mode: 'mTLS',
-      chainSide: 'OneApp → ECAS',
+      chainSide: 'dog → cat',
     })
     expect(
       client.sections[1].nodes.find((node) => node.id === 'local-root')?.title,
-    ).toBe('Server Trust Store')
+    ).toBe('cat Trust Store')
   })
   it('keeps storage material unlinked and adds client authentication only in mTLS architecture', () => {
     const tls = buildDiagram({ ...base, chapter: 'architecture' })
@@ -141,7 +141,7 @@ describe('diagram content', () => {
     expect(inbound.some((node) => node.id === 'http-client')).toBe(false)
     expect(
       nodes({ ...base, chapter: 'java', configTab: 'HTTP Client' }).some(
-        (node) => node.title === 'ssl.fromBundle("ecas")',
+        (node) => node.title === 'ssl.fromBundle("cat")',
       ),
     ).toBe(true)
   })

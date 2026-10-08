@@ -38,14 +38,14 @@ const step = (
 const common = {
   connect: step(
     'connect',
-    'Client opens connection',
-    'Client เตรียมเปิด HTTPS connection ไปยัง ecas.example.internal',
+    'dog opens connection',
+    'dog เตรียมเปิด HTTPS connection ไปยัง cat.example.internal',
     'connect',
   ),
   hello: step(
     'hello',
     'ClientHello',
-    'Client เสนอ TLS version, cipher suites และข้อมูลสำหรับ key agreement ให้ Server',
+    'dog เสนอ TLS version, cipher suites และข้อมูลสำหรับ key agreement ให้ cat',
     'hello',
     'toServer',
     'ClientHello',
@@ -53,24 +53,24 @@ const common = {
   serverHello: step(
     'server-hello',
     'ServerHello',
-    'Server เลือก TLS version และ cryptographic parameters ที่ทั้งสองฝั่งรองรับ',
+    'cat เลือก TLS version และ cryptographic parameters ที่ทั้งสองฝั่งรองรับ',
     'serverHello',
     'toClient',
     'ServerHello',
   ),
   certificate: step(
     'server-certificate',
-    'Server sends Server Certificate',
-    'Server ส่งบัตรประจำตัวพร้อม Intermediate CA ให้ Client โดย Private Key อยู่ใน Server',
+    'cat sends Server Certificate',
+    'cat ส่งบัตรประจำตัวพร้อม Intermediate CA ให้ dog โดย Private Key อยู่ใน cat',
     'serverCert',
     'toClient',
-    'ecas-server.crt',
+    'cat-server.crt',
     'serverCert',
   ),
   validate: step(
     'validate-server',
-    'Client validates Server Certificate',
-    'ตรวจลายมือชื่อ ช่วงอายุ SAN และ Server Authentication EKU เพื่อยืนยัน Server ตัวจริง',
+    'dog validates Server Certificate',
+    'ตรวจลายมือชื่อ ช่วงอายุ SAN และ Server Authentication EKU เพื่อยืนยัน cat ตัวจริง',
     'serverValidate',
     undefined,
     undefined,
@@ -78,8 +78,8 @@ const common = {
   ),
   trust: step(
     'trust-store',
-    'Client reads Trust Store',
-    'ดูรายชื่อ CA ที่ Client เชื่อถือ ใน oneapp-truststore.p12',
+    'dog reads Trust Store',
+    'ดูรายชื่อ CA ที่ dog เชื่อถือ ใน dog-truststore.p12',
     'trust',
     undefined,
     undefined,
@@ -88,7 +88,7 @@ const common = {
   chain: step(
     'chain',
     'Validate Certificate Chain',
-    'ตรวจ leaf → Intermediate CA → Root CA ที่อยู่ใน Trust Store จนยืนยัน Server ได้',
+    'ตรวจ leaf → Intermediate CA → Root CA ที่อยู่ใน Trust Store จนยืนยัน cat ได้',
     'chain',
     undefined,
     undefined,
@@ -96,16 +96,16 @@ const common = {
   ),
   requestCert: step(
     'request-client-certificate',
-    'Server requests Client Certificate',
-    'mTLS: Server ขอให้ Client แสดงบัตรประจำตัวด้วย',
+    'cat requests Client Certificate',
+    'mTLS: cat ขอให้ dog แสดงบัตรประจำตัวด้วย',
     'requestCert',
     'toClient',
     'CertificateRequest',
   ),
   keyStore: step(
     'key-store',
-    'Client reads Key Store',
-    'เลือก Client Certificate และ Private Key คู่กัน จาก oneapp-keystore.p12',
+    'dog reads Key Store',
+    'เลือก Client Certificate และ Private Key คู่กัน จาก dog-keystore.p12',
     'keyStore',
     undefined,
     undefined,
@@ -113,17 +113,17 @@ const common = {
   ),
   clientCert: step(
     'client-certificate',
-    'Client sends Client Certificate',
-    'ส่ง oneapp-client.crt และ Client CA chain ให้ Server โดยไม่ส่ง Private Key',
+    'dog sends Client Certificate',
+    'ส่ง dog-client.crt และ Client CA chain ให้ cat โดยไม่ส่ง Private Key',
     'clientCert',
     'toServer',
-    'oneapp-client.crt',
+    'dog-client.crt',
     'clientCert',
   ),
   clientProof: step(
     'client-proof',
-    'Client proves certificate ownership',
-    'Client ใช้ Private Key ลงลายมือชื่อ แล้วส่งเฉพาะลายมือชื่อให้ Server ตรวจด้วย Public Key',
+    'dog proves certificate ownership',
+    'dog ใช้ Private Key ลงลายมือชื่อ แล้วส่งเฉพาะลายมือชื่อให้ cat ตรวจด้วย Public Key',
     'clientProof',
     'toServer',
     'CertificateVerify · signature',
@@ -131,12 +131,12 @@ const common = {
   ),
   clientValidate: step(
     'validate-client',
-    'Server validates Client Certificate',
-    'Server ตรวจ Client Certificate chain, validity, clientAuth EKU และ proof of ownership',
+    'cat validates Client Certificate',
+    'cat ตรวจ Client Certificate chain, validity, clientAuth EKU และ proof of ownership',
     'clientValidate',
     undefined,
     undefined,
-    'ecasTrustStore',
+    'catTrustStore',
   ),
   keys: step(
     'session-keys',
@@ -158,16 +158,16 @@ const common = {
   ),
   request: step(
     'request',
-    'Client sends Server API Request',
-    'ส่ง POST /ecas/api/... ภายใน TLS tunnel นี่คือ Application Layer ที่เริ่มหลัง secure connection',
+    'dog sends cat API Request',
+    'ส่ง POST /cat/api/... ภายใน TLS tunnel นี่คือ Application Layer ที่เริ่มหลัง secure connection',
     'request',
     'toServer',
-    'POST /ecas/api/...',
+    'POST /cat/api/...',
   ),
   response: step(
     'response',
-    'Server sends API Response',
-    'Server ประมวลผล business logic และส่ง HTTPS response กลับภายใน encrypted tunnel',
+    'cat sends API Response',
+    'cat ประมวลผล business logic และส่ง HTTPS response กลับภายใน encrypted tunnel',
     'response',
     'toClient',
     '200 OK · API Response',
@@ -211,7 +211,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
   const validate = {
     ...common.validate,
     description:
-      'TrustManager ตรวจ peer chain กับ loaded trust anchors, validity, signature และ EKU; HTTPS client ตรวจ DNS SAN กับ ecas.example.internal',
+      'TrustManager ตรวจ peer chain กับ loaded trust anchors, validity, signature และ EKU; HTTPS client ตรวจ DNS SAN กับ cat.example.internal',
   }
   if (protocol === '1.3')
     return [
@@ -230,7 +230,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
       step(
         'encrypted-extensions',
         'EncryptedExtensions',
-        'Server ส่ง negotiated extensions ผ่าน handshake encryption',
+        'cat ส่ง negotiated extensions ผ่าน handshake encryption',
         'serverHello',
         'toClient',
         'EncryptedExtensions',
@@ -240,8 +240,8 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
       validate,
       step(
         'server-proof',
-        'Server CertificateVerify',
-        'Server ลงลายมือชื่อ handshake transcript เพื่อพิสูจน์ ownership; Client ตรวจด้วย Server public key',
+        'cat CertificateVerify',
+        'cat ลงลายมือชื่อ handshake transcript เพื่อพิสูจน์ ownership; dog ตรวจด้วย Server public key',
         'serverValidate',
         'toClient',
         'CertificateVerify · signature',
@@ -249,8 +249,8 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
       ),
       step(
         'server-finished',
-        'Server Finished',
-        'Client ตรวจ Finished MAC เพื่อยืนยัน server handshake integrity',
+        'cat Finished',
+        'dog ตรวจ Finished MAC เพื่อยืนยัน server handshake integrity',
         'finished',
         'toClient',
         'Finished',
@@ -259,14 +259,14 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
         ? [
             common.keyStore,
             common.clientCert,
-            { ...common.clientProof, title: 'Client CertificateVerify' },
+            { ...common.clientProof, title: 'dog CertificateVerify' },
             common.clientValidate,
           ]
         : []),
       step(
         'client-finished',
-        'Client Finished',
-        'Server ตรวจ Finished MAC; derive application traffic keys พร้อมใช้ หลัง authentication สำเร็จ',
+        'dog Finished',
+        'cat ตรวจ Finished MAC; derive application traffic keys พร้อมใช้ หลัง authentication สำเร็จ',
         'finished',
         'toServer',
         'Finished',
@@ -284,7 +284,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'server-key-exchange',
       'ServerKeyExchange · ECDHE',
-      'Server ส่ง ephemeral ECDHE parameters พร้อมลายมือชื่อจาก Server Private Key',
+      'cat ส่ง ephemeral ECDHE parameters พร้อมลายมือชื่อจาก cat Private Key',
       'serverValidate',
       'toClient',
       'Signed ServerKeyExchange',
@@ -294,7 +294,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'server-hello-done',
       'ServerHelloDone',
-      'Server ส่ง server handshake messages ครบแล้ว',
+      'cat ส่ง server handshake messages ครบแล้ว',
       'serverHello',
       'toClient',
       'ServerHelloDone',
@@ -303,43 +303,43 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'client-key-exchange',
       'ClientKeyExchange · ECDHE',
-      'Client ส่ง ephemeral public key; ทั้งสองฝั่งคำนวณ shared secret และ derive keys',
+      'dog ส่ง ephemeral public key; ทั้งสองฝั่งคำนวณ shared secret และ derive keys',
       'keys',
       'toServer',
       'ClientKeyExchange',
       'session',
     ),
     ...(mode === 'mTLS'
-      ? [{ ...common.clientProof, title: 'Client CertificateVerify' }, common.clientValidate]
+      ? [{ ...common.clientProof, title: 'dog CertificateVerify' }, common.clientValidate]
       : []),
     step(
       'client-ccs',
-      'Client ChangeCipherSpec',
-      'Client เปลี่ยนไปใช้ negotiated keys สำหรับ TLS records ที่ส่งต่อจากนี้',
+      'dog ChangeCipherSpec',
+      'dog เปลี่ยนไปใช้ negotiated keys สำหรับ TLS records ที่ส่งต่อจากนี้',
       'keys',
       'toServer',
       'ChangeCipherSpec',
     ),
     step(
       'client-finished',
-      'Client Finished',
-      'ส่ง Finished MAC ที่เข้ารหัส; Server ตรวจ handshake integrity',
+      'dog Finished',
+      'ส่ง Finished MAC ที่เข้ารหัส; cat ตรวจ handshake integrity',
       'finished',
       'toServer',
       'Finished',
     ),
     step(
       'server-ccs',
-      'Server ChangeCipherSpec',
-      'Server เปลี่ยนไปใช้ negotiated keys สำหรับ TLS records',
+      'cat ChangeCipherSpec',
+      'cat เปลี่ยนไปใช้ negotiated keys สำหรับ TLS records',
       'keys',
       'toClient',
       'ChangeCipherSpec',
     ),
     step(
       'server-finished',
-      'Server Finished',
-      'Client ตรวจ Finished MAC; handshake สำเร็จทั้งสองฝั่ง',
+      'cat Finished',
+      'dog ตรวจ Finished MAC; handshake สำเร็จทั้งสองฝั่ง',
       'finished',
       'toClient',
       'Finished',
@@ -377,16 +377,16 @@ export const validConditions: Conditions = {
 }
 export const conditionLabels: Record<keyof Conditions, string> = {
   serverValid: 'Server Certificate valid',
-  serverTrusted: 'Server CA trusted by Client',
+  serverTrusted: 'Server CA trusted by dog',
   notExpired: 'Certificate not expired',
   hostname: 'Hostname matches SAN',
   chainComplete: 'Complete Certificate Chain',
   notRevoked: 'Certificate not revoked',
   clientAvailable: 'Client Certificate',
-  privateAvailable: 'Client Private Key',
+  privateAvailable: 'dog Private Key',
   keyMatches: 'Certificate / Key match',
   clientValid: 'Client Certificate valid',
-  clientTrusted: 'Client CA trusted by Server',
+  clientTrusted: 'Client CA trusted by cat',
 }
 export const presets: { id: string; label: string; field?: keyof Conditions; client?: boolean }[] =
   [
@@ -423,7 +423,7 @@ const failures: Omit<Failure, 'index'>[] = [
     title: 'Invalid Server Certificate',
     code: 'bad_certificate / invalid signature or EKU',
     explanation:
-      'Certificate ของ Server ไม่ผ่านการตรวจลายมือชื่อ หรือไม่เหมาะสำหรับ Server Authentication',
+      'Certificate ของ cat ไม่ผ่านการตรวจลายมือชื่อ หรือไม่เหมาะสำหรับ Server Authentication',
     fix: 'ตรวจ certificate signature, issuer chain และ serverAuth EKU',
   },
   {
@@ -431,23 +431,23 @@ const failures: Omit<Failure, 'index'>[] = [
     phase: 'serverValidate',
     title: 'Unknown / Untrusted CA',
     code: 'PKIX path building failed',
-    explanation: 'Client ไม่พบ CA ที่เชื่อถือได้สำหรับ Certificate ของ Server',
-    fix: 'ตรวจ Corporate Root CA ใน oneapp-truststore.p12 และ chain ที่ Server ส่งมา',
+    explanation: 'dog ไม่พบ CA ที่เชื่อถือได้สำหรับ Certificate ของ cat',
+    fix: 'ตรวจ Corporate Root CA ใน dog-truststore.p12 และ chain ที่ cat ส่งมา',
   },
   {
     field: 'notExpired',
     phase: 'serverValidate',
     title: 'Certificate Expired',
     code: 'CertificateExpiredException',
-    explanation: 'Certificate ของ Server อยู่นอกช่วง Valid From / Valid To',
+    explanation: 'Certificate ของ cat อยู่นอกช่วง Valid From / Valid To',
     fix: 'ต่ออายุ certificate และตรวจเวลาเครื่องทั้งสองระบบ',
   },
   {
     field: 'hostname',
     phase: 'serverValidate',
     title: 'Hostname Verification Failed',
-    code: 'No subject alternative DNS name matching ecas.example.internal',
-    explanation: 'Hostname ที่ Client เรียก ไม่ตรงกับ DNS SAN ของ Server Certificate',
+    code: 'No subject alternative DNS name matching cat.example.internal',
+    explanation: 'Hostname ที่ dog เรียก ไม่ตรงกับ DNS SAN ของ Server Certificate',
     fix: 'ใช้ endpoint ที่ตรงกับ SAN หรือออก certificate ที่มี DNS SAN ที่ถูกต้อง',
   },
   {
@@ -455,8 +455,8 @@ const failures: Omit<Failure, 'index'>[] = [
     phase: 'serverValidate',
     title: 'Incomplete Certificate Chain',
     code: 'unable to find valid certification path',
-    explanation: 'Server ไม่ส่ง Intermediate CA ที่จำเป็น จึงสร้าง path ไปยัง trusted root ไม่ได้',
-    fix: 'ตั้ง Server ให้ส่ง leaf + intermediate chain; demo นี้ไม่มี cached intermediate หรือ AIA fetching',
+    explanation: 'cat ไม่ส่ง Intermediate CA ที่จำเป็น จึงสร้าง path ไปยัง trusted root ไม่ได้',
+    fix: 'ตั้ง cat ให้ส่ง leaf + intermediate chain; demo นี้ไม่มี cached intermediate หรือ AIA fetching',
   },
   {
     field: 'notRevoked',
@@ -471,8 +471,8 @@ const failures: Omit<Failure, 'index'>[] = [
     phase: 'keyStore',
     title: 'Client Certificate Required',
     code: 'certificate_required / no suitable client certificate',
-    explanation: 'Server ต้องการ Client Certificate แต่ Client ไม่มี identity ให้ส่ง',
-    fix: 'ติดตั้ง client certificate และ chain ใน PrivateKeyEntry ของ Client Key Store',
+    explanation: 'cat ต้องการ Client Certificate แต่ dog ไม่มี identity ให้ส่ง',
+    fix: 'ติดตั้ง client certificate และ chain ใน PrivateKeyEntry ของ dog Key Store',
   },
   {
     field: 'privateAvailable',
@@ -480,7 +480,7 @@ const failures: Omit<Failure, 'index'>[] = [
     title: 'Cannot prove certificate ownership',
     code: 'No client private key available',
     explanation: 'มี Certificate อย่างเดียว แต่ไม่มี Private Key สำหรับพิสูจน์ ownership',
-    fix: 'ตรวจ private key entry และ alias ใน Client Key Store ห้ามส่ง key ไป Server',
+    fix: 'ตรวจ private key entry และ alias ใน dog Key Store ห้ามส่ง key ไป cat',
   },
   {
     field: 'keyMatches',
@@ -497,7 +497,7 @@ const failures: Omit<Failure, 'index'>[] = [
     title: 'Client Certificate Verification Failed',
     code: 'bad_certificate / invalid clientAuth certificate',
     explanation:
-      'Server ตรวจ Client Certificate ไม่ผ่าน เช่น หมดอายุ ลายมือชื่อผิด หรือ EKU ไม่ใช่ clientAuth',
+      'cat ตรวจ Client Certificate ไม่ผ่าน เช่น หมดอายุ ลายมือชื่อผิด หรือ EKU ไม่ใช่ clientAuth',
     fix: 'ตรวจ client certificate validity, signature, EKU และ chain',
   },
   {
@@ -505,8 +505,8 @@ const failures: Omit<Failure, 'index'>[] = [
     phase: 'clientValidate',
     title: 'Client Certificate Verification Failed',
     code: 'unknown_ca / untrusted client issuer',
-    explanation: 'Server ไม่เชื่อ CA ที่ออก Certificate ให้ Client',
-    fix: 'ตรวจ approved client trust anchor ใน Server Trust Store และ Client CA chain ที่ Client ส่งมา',
+    explanation: 'cat ไม่เชื่อ CA ที่ออก Certificate ให้ dog',
+    fix: 'ตรวจ approved client trust anchor ใน cat Trust Store และ Client CA chain ที่ dog ส่งมา',
   },
 ]
 export function getFailure(steps: Step[], conditions: Conditions): Failure | undefined {

@@ -115,7 +115,7 @@ export function FailureLab({
                   <h2>Secure {mode} Connection Established</h2>
                 </div>
                 <p>
-                  Server Trusted ✓ {mode === 'mTLS' ? '· Client Trusted ✓' : ''} · API Request Sent ·
+                  cat Trusted ✓ {mode === 'mTLS' ? '· dog Trusted ✓' : ''} · API Request Sent ·
                   API Response Received
                 </p>
               </>
@@ -141,7 +141,7 @@ export function FailureLab({
           <h3>Server Certificate</h3>
           {serverFields.map((key) => toggle(key))}
           <div className="conditions-divider" />
-          <h3>mTLS Client Checks</h3>
+          <h3>mTLS dog Checks</h3>
           {mode === 'TLS' ? (
             <p className="demo-caption">ข้ามการตรวจ client identity ใน TLS</p>
           ) : null}

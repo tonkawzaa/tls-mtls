@@ -98,7 +98,7 @@ export default function App() {
   const [selectedConcept, setSelectedConcept] = useState<ConceptId | null>(null)
   const [diagramOpen, setDiagramOpen] = useState(false)
   const [certificate, setCertificate] = useState<CertificateId>('serverCert')
-  const [chainSide, setChainSide] = useState<ChainSide>('ECAS → OneApp')
+  const [chainSide, setChainSide] = useState<ChainSide>('cat → dog')
   const [configTab, setConfigTab] = useState<ConfigTab>('SSL Bundle')
   const [chainPauseVersion, setChainPauseVersion] = useState(0)
   const [conditions, setConditions] = useState<Conditions>({
@@ -127,7 +127,7 @@ export default function App() {
       setDiagramOpen(false)
       setSelectedConcept(null)
       setCertificate('serverCert')
-      setChainSide('ECAS → OneApp')
+      setChainSide('cat → dog')
       setConfigTab('SSL Bundle')
       setChapter(next)
     }
@@ -149,7 +149,7 @@ export default function App() {
     setSelectedConcept(null)
     if (id !== chapter) {
       setCertificate('serverCert')
-      setChainSide('ECAS → OneApp')
+      setChainSide('cat → dog')
       setConfigTab('SSL Bundle')
     }
     setChapter(id)
@@ -163,7 +163,7 @@ export default function App() {
   }
   function changeMode(value: Mode) {
     setMode(value)
-    setChainSide('ECAS → OneApp')
+    setChainSide('cat → dog')
     resetFlows()
   }
   function changeLevel(value: Level) {
@@ -224,9 +224,9 @@ export default function App() {
         >
           <ShieldCheck strokeWidth={1.8} />
           <span>
-            <span className="blue">Client</span>{' '}
+            <span className="blue">dog</span>{' '}
             <span className="brand-arrow">↔</span>{' '}
-            <span className="purple">Server</span>
+            <span className="purple">cat</span>
           </span>
         </a>
         <div className="header-actions">
@@ -304,7 +304,7 @@ export default function App() {
                 className="primary connect-button"
                 onClick={controller.start}
               >
-                <Play size={18} /> Connect to Server
+                <Play size={18} /> Connect to cat
               </Button>
             ) : null}
           </div>
@@ -376,7 +376,7 @@ export default function App() {
           />
         )}
         <footer className="app-footer">
-          <span>Client ↔ Server · Interactive TLS / mTLS Learning</span>
+          <span>dog ↔ cat · Interactive TLS / mTLS Learning</span>
           <span>Certificate = Identity · Private Key = Proof of ownership</span>
           <div>
             <a

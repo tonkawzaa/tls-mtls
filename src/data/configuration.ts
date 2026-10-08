@@ -16,57 +16,57 @@ export const configuration: Record<ConfigTab, { file: string; code: string }> = 
   ssl:
     bundle:
       jks:
-        ecas:
+        cat:
           keystore:
-            location: file:/config/oneapp-keystore.p12
-            password: \u0024{ONEAPP_KEYSTORE_PASSWORD}
+            location: file:/config/dog-keystore.p12
+            password: \u0024{DOG_KEYSTORE_PASSWORD}
             type: PKCS12
           truststore:
-            location: file:/config/oneapp-truststore.p12
-            password: \u0024{ONEAPP_TRUSTSTORE_PASSWORD}
+            location: file:/config/dog-truststore.p12
+            password: \u0024{DOG_TRUSTSTORE_PASSWORD}
             type: PKCS12`,
   },
   'HTTP Client': {
-    file: 'EcasClientConfiguration.java',
+    file: 'CatClientConfiguration.java',
     code: `import org.springframework.boot.autoconfigure.web.client.RestClientSsl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-public class EcasClientConfiguration {
+public class CatClientConfiguration {
     @Bean
-    RestClient ecasClient(RestClient.Builder builder,
-                          RestClientSsl ssl) {
+    RestClient catClient(RestClient.Builder builder,
+                         RestClientSsl ssl) {
         return builder
-            .baseUrl("https://ecas.example.internal")
-            .apply(ssl.fromBundle("ecas"))
+            .baseUrl("https://cat.example.internal")
+            .apply(ssl.fromBundle("cat"))
             .build();
     }
 }`,
   },
   'JVM Options': {
     file: 'JSSE default SSLContext · JVM options',
-    code: `-Djavax.net.ssl.keyStore=/config/oneapp-keystore.p12
+    code: `-Djavax.net.ssl.keyStore=/config/dog-keystore.p12
 -Djavax.net.ssl.keyStoreType=PKCS12
 -Djavax.net.ssl.keyStorePassword=*****
--Djavax.net.ssl.trustStore=/config/oneapp-truststore.p12
+-Djavax.net.ssl.trustStore=/config/dog-truststore.p12
 -Djavax.net.ssl.trustStoreType=PKCS12
 -Djavax.net.ssl.trustStorePassword=*****`,
   },
   'Inbound HTTPS': {
-    file: 'HTTPS ขาเข้าของแอปฝั่ง Client · application.yml',
-    code: `# HTTPS ขาเข้าของแอปฝั่ง Client — แยกจาก HTTP client ที่เรียก Server
+    file: 'HTTPS ขาเข้าของแอปฝั่ง dog · application.yml',
+    code: `# HTTPS ขาเข้าของแอปฝั่ง dog — แยกจาก HTTP client ที่เรียก cat
 server:
   port: 8443
   ssl:
     enabled: true
-    key-store: file:/config/oneapp-server-keystore.p12
-    key-store-password: \u0024{ONEAPP_SERVER_KEYSTORE_PASSWORD}
+    key-store: file:/config/dog-server-keystore.p12
+    key-store-password: \u0024{DOG_SERVER_KEYSTORE_PASSWORD}
     key-store-type: PKCS12
 
 # ต้องเป็น Server Authentication certificate
-# ไม่ใช้ oneapp-client.crt แทน server identity
+# ไม่ใช้ dog-client.crt แทน server identity
 # server.ssl ไม่ได้ตั้งค่า outbound HTTP client`,
   },
 }

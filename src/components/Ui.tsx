@@ -64,8 +64,8 @@ const conceptIcons: Record<ConceptId, LucideIcon> = {
   clientCA: Landmark,
   keyStore: Database,
   trustStore: Database,
-  ecasTrustStore: Database,
-  ecasKeyStore: Database,
+  catTrustStore: Database,
+  catKeyStore: Database,
   session: LockKeyhole,
 }
 export type Inspect = (id: ConceptId) => void
@@ -210,7 +210,7 @@ export function ConceptDialog({
                 <ConceptNode id="publicKey" inspect={inspect} detail="กุญแจสำหรับตรวจลายมือชื่อ" />
               </>
             ) : null}
-            {id === 'keyStore' || id === 'ecasKeyStore' ? (
+            {id === 'keyStore' || id === 'catKeyStore' ? (
               <div className="store-contents">
                 <ConceptNode
                   id={id === 'keyStore' ? 'clientCert' : 'serverCert'}
@@ -223,7 +223,7 @@ export function ConceptDialog({
                 <ConceptNode id={id === 'keyStore' ? 'clientCA' : 'serverCA'} inspect={inspect} />
               </div>
             ) : null}
-            {id === 'trustStore' || id === 'ecasTrustStore' ? (
+            {id === 'trustStore' || id === 'catTrustStore' ? (
               <ConceptNode id="root" inspect={inspect} detail="Trusted CA · Local trust anchor" />
             ) : null}
             <Button className="primary dialog-done" onClick={close}>
