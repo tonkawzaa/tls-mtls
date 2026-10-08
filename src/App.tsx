@@ -224,9 +224,9 @@ export default function App() {
         >
           <ShieldCheck strokeWidth={1.8} />
           <span>
-            <span className="blue">OneApp</span>{' '}
+            <span className="blue">Client</span>{' '}
             <span className="brand-arrow">↔</span>{' '}
-            <span className="purple">ECAS</span>
+            <span className="purple">Server</span>
           </span>
         </a>
         <div className="header-actions">
@@ -304,7 +304,7 @@ export default function App() {
                 className="primary connect-button"
                 onClick={controller.start}
               >
-                <Play size={18} /> Connect to ECAS
+                <Play size={18} /> Connect to Server
               </Button>
             ) : null}
           </div>
@@ -376,7 +376,7 @@ export default function App() {
           />
         )}
         <footer className="app-footer">
-          <span>OneApp ↔ ECAS · Interactive TLS / mTLS Learning</span>
+          <span>Client ↔ Server · Interactive TLS / mTLS Learning</span>
           <span>Certificate = Identity · Private Key = Proof of ownership</span>
           <div>
             <a

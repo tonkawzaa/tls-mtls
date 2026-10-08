@@ -38,14 +38,14 @@ const step = (
 const common = {
   connect: step(
     'connect',
-    'OneApp opens connection',
-    'OneApp เตรียมเปิด HTTPS connection ไปยัง ecas.example.internal',
+    'Client opens connection',
+    'Client เตรียมเปิด HTTPS connection ไปยัง ecas.example.internal',
     'connect',
   ),
   hello: step(
     'hello',
     'ClientHello',
-    'OneApp เสนอ TLS version, cipher suites และข้อมูลสำหรับ key agreement ให้ ECAS',
+    'Client เสนอ TLS version, cipher suites และข้อมูลสำหรับ key agreement ให้ Server',
     'hello',
     'toServer',
     'ClientHello',
@@ -53,15 +53,15 @@ const common = {
   serverHello: step(
     'server-hello',
     'ServerHello',
-    'ECAS เลือก TLS version และ cryptographic parameters ที่ทั้งสองฝั่งรองรับ',
+    'Server เลือก TLS version และ cryptographic parameters ที่ทั้งสองฝั่งรองรับ',
     'serverHello',
     'toClient',
     'ServerHello',
   ),
   certificate: step(
     'server-certificate',
-    'ECAS sends Server Certificate',
-    'ECAS ส่งบัตรประจำตัวพร้อม Intermediate CA ให้ OneApp โดย Private Key อยู่ใน ECAS',
+    'Server sends Server Certificate',
+    'Server ส่งบัตรประจำตัวพร้อม Intermediate CA ให้ Client โดย Private Key อยู่ใน Server',
     'serverCert',
     'toClient',
     'ecas-server.crt',
@@ -69,8 +69,8 @@ const common = {
   ),
   validate: step(
     'validate-server',
-    'OneApp validates ECAS Certificate',
-    'ตรวจลายมือชื่อ ช่วงอายุ SAN และ Server Authentication EKU เพื่อยืนยัน ECAS ตัวจริง',
+    'Client validates Server Certificate',
+    'ตรวจลายมือชื่อ ช่วงอายุ SAN และ Server Authentication EKU เพื่อยืนยัน Server ตัวจริง',
     'serverValidate',
     undefined,
     undefined,
@@ -78,8 +78,8 @@ const common = {
   ),
   trust: step(
     'trust-store',
-    'OneApp reads Trust Store',
-    'ดูรายชื่อ CA ที่ OneApp เชื่อถือ ใน oneapp-truststore.p12',
+    'Client reads Trust Store',
+    'ดูรายชื่อ CA ที่ Client เชื่อถือ ใน oneapp-truststore.p12',
     'trust',
     undefined,
     undefined,
@@ -88,7 +88,7 @@ const common = {
   chain: step(
     'chain',
     'Validate Certificate Chain',
-    'ตรวจ leaf → Intermediate CA → Root CA ที่อยู่ใน Trust Store จนยืนยัน ECAS ได้',
+    'ตรวจ leaf → Intermediate CA → Root CA ที่อยู่ใน Trust Store จนยืนยัน Server ได้',
     'chain',
     undefined,
     undefined,
@@ -96,15 +96,15 @@ const common = {
   ),
   requestCert: step(
     'request-client-certificate',
-    'ECAS requests Client Certificate',
-    'mTLS: ECAS ขอให้ OneApp แสดงบัตรประจำตัวด้วย',
+    'Server requests Client Certificate',
+    'mTLS: Server ขอให้ Client แสดงบัตรประจำตัวด้วย',
     'requestCert',
     'toClient',
     'CertificateRequest',
   ),
   keyStore: step(
     'key-store',
-    'OneApp reads Key Store',
+    'Client reads Key Store',
     'เลือก Client Certificate และ Private Key คู่กัน จาก oneapp-keystore.p12',
     'keyStore',
     undefined,
@@ -113,8 +113,8 @@ const common = {
   ),
   clientCert: step(
     'client-certificate',
-    'OneApp sends Client Certificate',
-    'ส่ง oneapp-client.crt และ Client CA chain ให้ ECAS โดยไม่ส่ง Private Key',
+    'Client sends Client Certificate',
+    'ส่ง oneapp-client.crt และ Client CA chain ให้ Server โดยไม่ส่ง Private Key',
     'clientCert',
     'toServer',
     'oneapp-client.crt',
@@ -122,8 +122,8 @@ const common = {
   ),
   clientProof: step(
     'client-proof',
-    'OneApp proves certificate ownership',
-    'OneApp ใช้ Private Key ลงลายมือชื่อ แล้วส่งเฉพาะลายมือชื่อให้ ECAS ตรวจด้วย Public Key',
+    'Client proves certificate ownership',
+    'Client ใช้ Private Key ลงลายมือชื่อ แล้วส่งเฉพาะลายมือชื่อให้ Server ตรวจด้วย Public Key',
     'clientProof',
     'toServer',
     'CertificateVerify · signature',
@@ -131,8 +131,8 @@ const common = {
   ),
   clientValidate: step(
     'validate-client',
-    'ECAS validates OneApp Certificate',
-    'ECAS ตรวจ Client Certificate chain, validity, clientAuth EKU และ proof of ownership',
+    'Server validates Client Certificate',
+    'Server ตรวจ Client Certificate chain, validity, clientAuth EKU และ proof of ownership',
     'clientValidate',
     undefined,
     undefined,
@@ -158,7 +158,7 @@ const common = {
   ),
   request: step(
     'request',
-    'OneApp sends ECAS API Request',
+    'Client sends Server API Request',
     'ส่ง POST /ecas/api/... ภายใน TLS tunnel นี่คือ Application Layer ที่เริ่มหลัง secure connection',
     'request',
     'toServer',
@@ -166,8 +166,8 @@ const common = {
   ),
   response: step(
     'response',
-    'ECAS sends API Response',
-    'ECAS ประมวลผล business logic และส่ง HTTPS response กลับภายใน encrypted tunnel',
+    'Server sends API Response',
+    'Server ประมวลผล business logic และส่ง HTTPS response กลับภายใน encrypted tunnel',
     'response',
     'toClient',
     '200 OK · API Response',
@@ -230,7 +230,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
       step(
         'encrypted-extensions',
         'EncryptedExtensions',
-        'ECAS ส่ง negotiated extensions ผ่าน handshake encryption',
+        'Server ส่ง negotiated extensions ผ่าน handshake encryption',
         'serverHello',
         'toClient',
         'EncryptedExtensions',
@@ -241,7 +241,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
       step(
         'server-proof',
         'Server CertificateVerify',
-        'ECAS ลงลายมือชื่อ handshake transcript เพื่อพิสูจน์ ownership; OneApp ตรวจด้วย ECAS public key',
+        'Server ลงลายมือชื่อ handshake transcript เพื่อพิสูจน์ ownership; Client ตรวจด้วย Server public key',
         'serverValidate',
         'toClient',
         'CertificateVerify · signature',
@@ -250,7 +250,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
       step(
         'server-finished',
         'Server Finished',
-        'OneApp ตรวจ Finished MAC เพื่อยืนยัน server handshake integrity',
+        'Client ตรวจ Finished MAC เพื่อยืนยัน server handshake integrity',
         'finished',
         'toClient',
         'Finished',
@@ -266,7 +266,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
       step(
         'client-finished',
         'Client Finished',
-        'ECAS ตรวจ Finished MAC; derive application traffic keys พร้อมใช้ หลัง authentication สำเร็จ',
+        'Server ตรวจ Finished MAC; derive application traffic keys พร้อมใช้ หลัง authentication สำเร็จ',
         'finished',
         'toServer',
         'Finished',
@@ -284,7 +284,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'server-key-exchange',
       'ServerKeyExchange · ECDHE',
-      'ECAS ส่ง ephemeral ECDHE parameters พร้อมลายมือชื่อจาก ECAS Private Key',
+      'Server ส่ง ephemeral ECDHE parameters พร้อมลายมือชื่อจาก Server Private Key',
       'serverValidate',
       'toClient',
       'Signed ServerKeyExchange',
@@ -294,7 +294,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'server-hello-done',
       'ServerHelloDone',
-      'ECAS ส่ง server handshake messages ครบแล้ว',
+      'Server ส่ง server handshake messages ครบแล้ว',
       'serverHello',
       'toClient',
       'ServerHelloDone',
@@ -303,7 +303,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'client-key-exchange',
       'ClientKeyExchange · ECDHE',
-      'OneApp ส่ง ephemeral public key; ทั้งสองฝั่งคำนวณ shared secret และ derive keys',
+      'Client ส่ง ephemeral public key; ทั้งสองฝั่งคำนวณ shared secret และ derive keys',
       'keys',
       'toServer',
       'ClientKeyExchange',
@@ -315,7 +315,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'client-ccs',
       'Client ChangeCipherSpec',
-      'OneApp เปลี่ยนไปใช้ negotiated keys สำหรับ TLS records ที่ส่งต่อจากนี้',
+      'Client เปลี่ยนไปใช้ negotiated keys สำหรับ TLS records ที่ส่งต่อจากนี้',
       'keys',
       'toServer',
       'ChangeCipherSpec',
@@ -323,7 +323,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'client-finished',
       'Client Finished',
-      'ส่ง Finished MAC ที่เข้ารหัส; ECAS ตรวจ handshake integrity',
+      'ส่ง Finished MAC ที่เข้ารหัส; Server ตรวจ handshake integrity',
       'finished',
       'toServer',
       'Finished',
@@ -331,7 +331,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'server-ccs',
       'Server ChangeCipherSpec',
-      'ECAS เปลี่ยนไปใช้ negotiated keys สำหรับ TLS records',
+      'Server เปลี่ยนไปใช้ negotiated keys สำหรับ TLS records',
       'keys',
       'toClient',
       'ChangeCipherSpec',
@@ -339,7 +339,7 @@ export function buildSteps(mode: Mode, level: Level, protocol: Protocol): Step[]
     step(
       'server-finished',
       'Server Finished',
-      'OneApp ตรวจ Finished MAC; handshake สำเร็จทั้งสองฝั่ง',
+      'Client ตรวจ Finished MAC; handshake สำเร็จทั้งสองฝั่ง',
       'finished',
       'toClient',
       'Finished',
@@ -376,17 +376,17 @@ export const validConditions: Conditions = {
   clientTrusted: true,
 }
 export const conditionLabels: Record<keyof Conditions, string> = {
-  serverValid: 'ECAS Certificate valid',
-  serverTrusted: 'ECAS CA trusted by OneApp',
+  serverValid: 'Server Certificate valid',
+  serverTrusted: 'Server CA trusted by Client',
   notExpired: 'Certificate not expired',
   hostname: 'Hostname matches SAN',
   chainComplete: 'Complete Certificate Chain',
   notRevoked: 'Certificate not revoked',
-  clientAvailable: 'OneApp Client Certificate',
-  privateAvailable: 'OneApp Private Key',
+  clientAvailable: 'Client Certificate',
+  privateAvailable: 'Client Private Key',
   keyMatches: 'Certificate / Key match',
-  clientValid: 'OneApp Certificate valid',
-  clientTrusted: 'OneApp CA trusted by ECAS',
+  clientValid: 'Client Certificate valid',
+  clientTrusted: 'Client CA trusted by Server',
 }
 export const presets: { id: string; label: string; field?: keyof Conditions; client?: boolean }[] =
   [
@@ -420,10 +420,10 @@ const failures: Omit<Failure, 'index'>[] = [
   {
     field: 'serverValid',
     phase: 'serverValidate',
-    title: 'Invalid ECAS Certificate',
+    title: 'Invalid Server Certificate',
     code: 'bad_certificate / invalid signature or EKU',
     explanation:
-      'Certificate ของ ECAS ไม่ผ่านการตรวจลายมือชื่อ หรือไม่เหมาะสำหรับ Server Authentication',
+      'Certificate ของ Server ไม่ผ่านการตรวจลายมือชื่อ หรือไม่เหมาะสำหรับ Server Authentication',
     fix: 'ตรวจ certificate signature, issuer chain และ serverAuth EKU',
   },
   {
@@ -431,15 +431,15 @@ const failures: Omit<Failure, 'index'>[] = [
     phase: 'serverValidate',
     title: 'Unknown / Untrusted CA',
     code: 'PKIX path building failed',
-    explanation: 'OneApp ไม่พบ CA ที่เชื่อถือได้สำหรับ Certificate ของ ECAS',
-    fix: 'ตรวจ Corporate Root CA ใน oneapp-truststore.p12 และ chain ที่ ECAS ส่งมา',
+    explanation: 'Client ไม่พบ CA ที่เชื่อถือได้สำหรับ Certificate ของ Server',
+    fix: 'ตรวจ Corporate Root CA ใน oneapp-truststore.p12 และ chain ที่ Server ส่งมา',
   },
   {
     field: 'notExpired',
     phase: 'serverValidate',
     title: 'Certificate Expired',
     code: 'CertificateExpiredException',
-    explanation: 'Certificate ของ ECAS อยู่นอกช่วง Valid From / Valid To',
+    explanation: 'Certificate ของ Server อยู่นอกช่วง Valid From / Valid To',
     fix: 'ต่ออายุ certificate และตรวจเวลาเครื่องทั้งสองระบบ',
   },
   {
@@ -447,7 +447,7 @@ const failures: Omit<Failure, 'index'>[] = [
     phase: 'serverValidate',
     title: 'Hostname Verification Failed',
     code: 'No subject alternative DNS name matching ecas.example.internal',
-    explanation: 'Hostname ที่ OneApp เรียก ไม่ตรงกับ DNS SAN ของ ECAS Certificate',
+    explanation: 'Hostname ที่ Client เรียก ไม่ตรงกับ DNS SAN ของ Server Certificate',
     fix: 'ใช้ endpoint ที่ตรงกับ SAN หรือออก certificate ที่มี DNS SAN ที่ถูกต้อง',
   },
   {
@@ -455,8 +455,8 @@ const failures: Omit<Failure, 'index'>[] = [
     phase: 'serverValidate',
     title: 'Incomplete Certificate Chain',
     code: 'unable to find valid certification path',
-    explanation: 'ECAS ไม่ส่ง Intermediate CA ที่จำเป็น จึงสร้าง path ไปยัง trusted root ไม่ได้',
-    fix: 'ตั้ง ECAS ให้ส่ง leaf + intermediate chain; demo นี้ไม่มี cached intermediate หรือ AIA fetching',
+    explanation: 'Server ไม่ส่ง Intermediate CA ที่จำเป็น จึงสร้าง path ไปยัง trusted root ไม่ได้',
+    fix: 'ตั้ง Server ให้ส่ง leaf + intermediate chain; demo นี้ไม่มี cached intermediate หรือ AIA fetching',
   },
   {
     field: 'notRevoked',
@@ -471,8 +471,8 @@ const failures: Omit<Failure, 'index'>[] = [
     phase: 'keyStore',
     title: 'Client Certificate Required',
     code: 'certificate_required / no suitable client certificate',
-    explanation: 'ECAS ต้องการ Client Certificate แต่ OneApp ไม่มี identity ให้ส่ง',
-    fix: 'ติดตั้ง client certificate และ chain ใน PrivateKeyEntry ของ OneApp Key Store',
+    explanation: 'Server ต้องการ Client Certificate แต่ Client ไม่มี identity ให้ส่ง',
+    fix: 'ติดตั้ง client certificate และ chain ใน PrivateKeyEntry ของ Client Key Store',
   },
   {
     field: 'privateAvailable',
@@ -480,7 +480,7 @@ const failures: Omit<Failure, 'index'>[] = [
     title: 'Cannot prove certificate ownership',
     code: 'No client private key available',
     explanation: 'มี Certificate อย่างเดียว แต่ไม่มี Private Key สำหรับพิสูจน์ ownership',
-    fix: 'ตรวจ private key entry และ alias ใน OneApp Key Store ห้ามส่ง key ไป ECAS',
+    fix: 'ตรวจ private key entry และ alias ใน Client Key Store ห้ามส่ง key ไป Server',
   },
   {
     field: 'keyMatches',
@@ -488,7 +488,7 @@ const failures: Omit<Failure, 'index'>[] = [
     title: 'TLS Authentication Failed',
     code: 'CertificateVerify signature verification failed',
     explanation:
-      'Private Key ไม่ตรงกับ Public Key ใน OneApp Certificate จึงพิสูจน์ ownership ไม่ได้',
+      'Private Key ไม่ตรงกับ Public Key ใน Client Certificate จึงพิสูจน์ ownership ไม่ได้',
     fix: 'ใช้ certificate และ private key คู่กัน; Java KeyStore/provider อาจตรวจพบก่อนส่ง handshake',
   },
   {
@@ -497,7 +497,7 @@ const failures: Omit<Failure, 'index'>[] = [
     title: 'Client Certificate Verification Failed',
     code: 'bad_certificate / invalid clientAuth certificate',
     explanation:
-      'ECAS ตรวจ OneApp Certificate ไม่ผ่าน เช่น หมดอายุ ลายมือชื่อผิด หรือ EKU ไม่ใช่ clientAuth',
+      'Server ตรวจ Client Certificate ไม่ผ่าน เช่น หมดอายุ ลายมือชื่อผิด หรือ EKU ไม่ใช่ clientAuth',
     fix: 'ตรวจ client certificate validity, signature, EKU และ chain',
   },
   {
@@ -505,8 +505,8 @@ const failures: Omit<Failure, 'index'>[] = [
     phase: 'clientValidate',
     title: 'Client Certificate Verification Failed',
     code: 'unknown_ca / untrusted client issuer',
-    explanation: 'ECAS ไม่เชื่อ CA ที่ออก Certificate ให้ OneApp',
-    fix: 'ตรวจ approved client trust anchor ใน ECAS Trust Store และ Client CA chain ที่ OneApp ส่งมา',
+    explanation: 'Server ไม่เชื่อ CA ที่ออก Certificate ให้ Client',
+    fix: 'ตรวจ approved client trust anchor ใน Server Trust Store และ Client CA chain ที่ Client ส่งมา',
   },
 ]
 export function getFailure(steps: Step[], conditions: Conditions): Failure | undefined {

@@ -71,9 +71,9 @@ function handshakeNode(step: Step): DiagramNode {
             : 'blue'
   const tag =
     step.direction === 'toServer'
-      ? 'OneApp → ECAS'
+      ? 'Client → Server'
       : step.direction === 'toClient'
-        ? 'ECAS → OneApp'
+        ? 'Server → Client'
         : 'ประมวลผลในระบบ'
   return node(step.id, step.title, step.description, tag, tone)
 }
@@ -132,13 +132,13 @@ export function buildDiagram(context: DiagramContext): Diagram {
     const selectedClient = certificate === 'clientCert'
     const clientChain = mode === 'mTLS' && context.chainSide === 'OneApp → ECAS'
     const issuer = selectedClient ? 'clientCA' : 'serverCA'
-    const owner = selectedClient ? 'OneApp' : 'ECAS'
-    const peer = clientChain ? 'ECAS' : 'OneApp'
+    const owner = selectedClient ? 'Client' : 'Server'
+    const peer = clientChain ? 'Server' : 'Client'
     const leaf = clientChain ? 'clientCert' : 'serverCert'
     const chainIssuer = clientChain ? 'clientCA' : 'serverCA'
     return {
       title: 'Certificates & CA · ตัวตนและสายโซ่ความเชื่อถือ',
-      summary: `Certificate Explorer: ${concepts[certificate].title} · Chain validation: ${clientChain ? 'OneApp → ECAS' : 'ECAS → OneApp'} (เลือกแยกกันได้)`,
+      summary: `Certificate Explorer: ${concepts[certificate].title} · Chain validation: ${clientChain ? 'Client → Server' : 'Server → Client'} (เลือกแยกกันได้)`,
       sections: [
         {
           id: 'certificate-identity',
@@ -174,7 +174,7 @@ export function buildDiagram(context: DiagramContext): Diagram {
         },
         {
           id: 'certificate-chain',
-          title: `Chain validation · ${clientChain ? 'OneApp → ECAS' : 'ECAS → OneApp'}`,
+          title: `Chain validation · ${clientChain ? 'Client → Server' : 'Server → Client'}`,
           note: 'ลูกศรแสดงขั้นตอนตรวจ chain; local Root CA ไม่ใช่ข้อมูลที่ต้องรับจาก peer',
           nodes: [
             node(
@@ -208,8 +208,8 @@ export function buildDiagram(context: DiagramContext): Diagram {
             node(
               'trusted',
               clientChain
-                ? 'OneApp Identity Verified'
-                : 'ECAS Certificate Trusted',
+                ? 'Client Identity Verified'
+                : 'Server Certificate Trusted',
               'ผ่านการตรวจ certificate; proof of ownership และ handshake ยังต้องครบก่อนส่ง API',
               'Certificate ผ่าน',
               'green',
@@ -222,25 +222,25 @@ export function buildDiagram(context: DiagramContext): Diagram {
   if (chapter === 'architecture') {
     return {
       title: 'Stores & Architecture · Who I am / Who I trust',
-      summary: `ตัวตนและ trust อยู่ในแต่ละระบบ · ${mode === 'mTLS' ? 'ตรวจตัวตนทั้งสองฝั่ง' : 'OneApp ตรวจตัวตน ECAS'}`,
+      summary: `ตัวตนและ trust อยู่ในแต่ละระบบ · ${mode === 'mTLS' ? 'ตรวจตัวตนทั้งสองฝั่ง' : 'Client ตรวจตัวตน Server'}`,
       sections: [
         {
           id: 'oneapp-stores',
-          title: 'OneApp · local material',
-          note: 'สองกล่องเป็นข้อมูลใน OneApp ไม่ใช่ packet ที่ส่งข้ามระบบ',
+          title: 'Client · local material',
+          note: 'สองกล่องเป็นข้อมูลใน Client ไม่ใช่ packet ที่ส่งข้ามระบบ',
           linked: false,
           nodes: [
             node(
               'oneapp-identity',
-              'OneApp Key Store',
+              'Client Key Store',
               `Client certificate + Private Key + chain · ${mode === 'mTLS' ? 'ใช้ตอบคำขอ client identity' : 'ไม่ใช้ client identity ใน TLS'}`,
-              'Private Key อยู่ใน OneApp',
+              'Private Key อยู่ใน Client',
               'blue',
             ),
             node(
               'oneapp-trust',
-              'OneApp Trust Store',
-              'เก็บ trusted Root CA สำหรับตรวจ chain ของ ECAS',
+              'Client Trust Store',
+              'เก็บ trusted Root CA สำหรับตรวจ chain ของ Server',
               'Local trust anchor',
               'green',
             ),
@@ -248,21 +248,21 @@ export function buildDiagram(context: DiagramContext): Diagram {
         },
         {
           id: 'ecas-stores',
-          title: 'ECAS · local material',
+          title: 'Server · local material',
           note: 'Private Keys ไม่เดินทางข้ามระบบ',
           linked: false,
           nodes: [
             node(
               'ecas-identity',
-              'ECAS Key Store',
-              'Server certificate + Private Key + intermediate chain สำหรับพิสูจน์ตัวตน ECAS',
-              'Private Key อยู่ใน ECAS',
+              'Server Key Store',
+              'Server certificate + Private Key + intermediate chain สำหรับพิสูจน์ตัวตน Server',
+              'Private Key อยู่ใน Server',
               'purple',
             ),
             node(
               'ecas-trust',
-              'ECAS Trust Store',
-              `Trusted Root CA สำหรับ client chain · ${mode === 'mTLS' ? 'ใช้ตรวจ OneApp' : 'ไม่ตรวจ Client Certificate ใน TLS'}`,
+              'Server Trust Store',
+              `Trusted Root CA สำหรับ client chain · ${mode === 'mTLS' ? 'ใช้ตรวจ Client' : 'ไม่ตรวจ Client Certificate ใน TLS'}`,
               'Local client trust anchor',
               'green',
             ),
@@ -275,8 +275,8 @@ export function buildDiagram(context: DiagramContext): Diagram {
           nodes: [
             node(
               'server-identity',
-              'OneApp ตรวจ ECAS',
-              'ตรวจ server chain กับ OneApp Trust Store และตรวจ hostname/SAN',
+              'Client ตรวจ Server',
+              'ตรวจ server chain กับ Client Trust Store และตรวจ hostname/SAN',
               'Server authentication',
               'blue',
             ),
@@ -284,8 +284,8 @@ export function buildDiagram(context: DiagramContext): Diagram {
               ? [
                   node(
                     'client-identity',
-                    'ECAS ตรวจ OneApp',
-                    'ตรวจ client chain กับ ECAS Trust Store และตรวจ proof of ownership',
+                    'Server ตรวจ Client',
+                    'ตรวจ client chain กับ Server Trust Store และตรวจ proof of ownership',
                     'Client authentication',
                     'purple',
                   ),
@@ -307,21 +307,21 @@ export function buildDiagram(context: DiagramContext): Diagram {
     'SSL Bundle': [
       {
         id: 'bundle-stores',
-        title: 'Material ที่โหลดใน OneApp',
+        title: 'Material ที่โหลดใน Client',
         note: 'อ่าน stores เพื่อเตรียม identity และ trust ในระบบ',
         linked: false,
         nodes: [
           node(
             'bundle-key',
             'oneapp-keystore.p12',
-            `Client identity + Private Key + chain · ${mode === 'TLS' ? 'ไม่ต้องใช้ client identity ใน TLS' : 'ใช้เมื่อ ECAS ขอ Client Certificate'}`,
+            `Client identity + Private Key + chain · ${mode === 'TLS' ? 'ไม่ต้องใช้ client identity ใน TLS' : 'ใช้เมื่อ Server ขอ Client Certificate'}`,
             'Key Store · local',
             'blue',
           ),
           node(
             'bundle-trust',
             'oneapp-truststore.p12',
-            'Trusted Root CA สำหรับตรวจ ECAS certificate chain',
+            'Trusted Root CA สำหรับตรวจ Server certificate chain',
             'Trust Store · local',
             'green',
           ),
@@ -349,7 +349,7 @@ export function buildDiagram(context: DiagramContext): Diagram {
           node(
             'attachment',
             'ผูกกับ HTTP Client',
-            'RestClient ต้องนำ bundle ไปใช้ด้วย ssl.fromBundle("ecas") ก่อนเรียก ECAS',
+            'RestClient ต้องนำ bundle ไปใช้ด้วย ssl.fromBundle("ecas") ก่อนเรียก Server',
             'ดูแท็บ HTTP Client',
             'purple',
           ),
@@ -359,7 +359,7 @@ export function buildDiagram(context: DiagramContext): Diagram {
     'HTTP Client': [
       {
         id: 'http-client-flow',
-        title: 'HTTPS ขาออก · OneApp → ECAS',
+        title: 'HTTPS ขาออก · Client → Server',
         note: 'RestClient ใช้ bundle ที่กำหนดไว้จริง',
         nodes: [
           node(
@@ -378,7 +378,7 @@ export function buildDiagram(context: DiagramContext): Diagram {
           ),
           node(
             'http-client',
-            'RestClient → ECAS',
+            'RestClient → Server',
             `เชื่อมต่อ https://ecas.example.internal ด้วย ${mode}; API ส่งหลัง handshake สำเร็จ`,
             'Outbound HTTPS',
             'green',
@@ -409,7 +409,7 @@ export function buildDiagram(context: DiagramContext): Diagram {
           node(
             'default-client',
             'Client ที่ใช้ default context',
-            `ใช้ context นี้ทำ ${mode} handshake ไป ECAS; client ที่สร้าง context เองไม่รับการตั้งค่านี้โดยอัตโนมัติ`,
+            `ใช้ context นี้ทำ ${mode} handshake ไป Server; client ที่สร้าง context เองไม่รับการตั้งค่านี้โดยอัตโนมัติ`,
             'Outbound HTTPS',
             'green',
           ),
@@ -419,42 +419,42 @@ export function buildDiagram(context: DiagramContext): Diagram {
     'Inbound HTTPS': [
       {
         id: 'inbound-material',
-        title: 'Server identity ของ OneApp',
-        note: 'ใช้ Server Certificate แยกจาก Client Certificate สำหรับเรียก ECAS',
+        title: 'Server identity สำหรับ HTTPS ขาเข้าของแอปฝั่ง Client',
+        note: 'ใช้ Server Certificate แยกจาก Client Certificate สำหรับเรียก Server',
         linked: false,
         nodes: [
           node(
             'inbound-store',
-            'OneApp Server Key Store',
+            'Key Store สำหรับ HTTPS ขาเข้า',
             'oneapp-server-keystore.p12 เก็บ serverAuth certificate + Private Key + chain',
-            'Private Key อยู่ใน OneApp',
+            'Private Key อยู่ใน Client',
             'blue',
           ),
         ],
       },
       {
         id: 'inbound-flow',
-        title: 'HTTPS ขาเข้า · ผู้เรียก → OneApp',
+        title: 'HTTPS ขาเข้า · ผู้เรียก → Client',
         note: 'ตัวอย่างตั้ง HTTPS ขาเข้า; ไม่เปิด inbound mTLS และไม่ตั้ง outbound client',
         nodes: [
           node(
             'incoming-client',
             'ผู้เรียก HTTPS',
-            'ผู้เรียกตรวจ Server Certificate ของ OneApp กับ trust ที่ผู้เรียกกำหนด',
-            'Caller → OneApp',
+            'ผู้เรียกตรวจ Server Certificate ของ Client กับ trust ที่ผู้เรียกกำหนด',
+            'Caller → Client',
             'purple',
           ),
           node(
             'oneapp-server',
-            'OneApp HTTPS Server :8443',
-            'server.ssl ตั้ง listener และ server identity ให้ OneApp รับ HTTPS',
+            'HTTPS ขาเข้าของแอปฝั่ง Client :8443',
+            'แอปฝั่ง Client รับบท HTTPS Server ขาเข้า; server.ssl ตั้ง listener และ server identity',
             'Inbound HTTPS',
             'blue',
           ),
           node(
             'inbound-api',
-            'OneApp API',
-            'รับ API ผ่าน secure connection ขาเข้า; การเรียก ECAS ขาออกต้องตั้ง HTTP Client แยก',
+            'Client API',
+            'รับ API ผ่าน secure connection ขาเข้า; การเรียก Server ขาออกต้องตั้ง HTTP Client แยก',
             'Encrypted request/response',
             'green',
           ),

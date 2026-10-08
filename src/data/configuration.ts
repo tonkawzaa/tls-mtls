@@ -55,8 +55,8 @@ public class EcasClientConfiguration {
 -Djavax.net.ssl.trustStorePassword=*****`,
   },
   'Inbound HTTPS': {
-    file: 'OneApp HTTPS server · application.yml',
-    code: `# HTTPS ขาเข้า OneApp — แยกจาก client ที่เรียก ECAS
+    file: 'HTTPS ขาเข้าของแอปฝั่ง Client · application.yml',
+    code: `# HTTPS ขาเข้าของแอปฝั่ง Client — แยกจาก HTTP client ที่เรียก Server
 server:
   port: 8443
   ssl:

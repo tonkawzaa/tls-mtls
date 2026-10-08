@@ -82,12 +82,12 @@ export function JavaChapter({
                 <Server size={24} /> Inbound HTTPS
               </h2>
               <p>
-                OneApp เป็น HTTPS Server สำหรับผู้ที่เรียกเข้ามา ต้องมี Server
-                Certificate และ Private Key ของ OneApp
+                แอปฝั่ง Client รับบท HTTPS Server สำหรับผู้ที่เรียกเข้ามา ต้องมี
+                Server Certificate และ Private Key สำหรับ HTTPS ขาเข้า
               </p>
               <Note>
                 ใช้ <code>oneapp-server-keystore.p12</code> ที่มี serverAuth
-                certificate แยกจาก Client Certificate สำหรับเรียก ECAS
+                certificate แยกจาก Client Certificate สำหรับเรียก Server
               </Note>
               <p>
                 ตัวอย่างนี้ตั้ง HTTPS ขาเข้าเท่านั้น ไม่ได้เปิด mTLS
@@ -109,12 +109,12 @@ export function JavaChapter({
                   label="Intermediate CA chain"
                 />
                 <div className="client-to-ecas">
-                  <span className="blue">OneApp HTTP Client</span>
+                  <span className="blue">Client HTTP Client</span>
                   <ArrowRight size={20} />
-                  <span className="purple">ECAS</span>
+                  <span className="purple">Server</span>
                 </div>
                 <Note icon={KeyRound}>
-                  OneApp ใช้ Key Store เมื่อ ECAS ขอ Client Certificate ·
+                  Client ใช้ Key Store เมื่อ Server ขอ Client Certificate ·
                   Private Key ใช้ลงลายมือชื่อและไม่ถูกส่ง
                   {mode === 'TLS' ? (
                     <p>ใน TLS แบบ server-only ไม่ต้องใช้ Client Key Store</p>
@@ -129,18 +129,18 @@ export function JavaChapter({
                 <ConceptNode
                   id="root"
                   inspect={inspect}
-                  label="ECAS Root CA"
+                  label="Server Root CA"
                   detail="Corporate Root CA · local trust anchor"
                 />
                 <Note tone="green">
-                  OneApp ใช้ Trust Store ตรวจ Certificate chain ของ ECAS
+                  Client ใช้ Trust Store ตรวจ Certificate chain ของ Server
                 </Note>
               </section>
             </>
           )}
           <Note>
             <strong>server.ssl = HTTPS ขาเข้า</strong>
-            <p>การเรียก ECAS ขาออก ต้องผูก SSL Bundle กับ HTTP Client</p>
+            <p>การเรียก Server ขาออก ต้องผูก SSL Bundle กับ HTTP Client</p>
           </Note>
           {tab === 'HTTP Client' ? (
             <Note tone="green">

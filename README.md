@@ -1,5 +1,6 @@
-# OneApp ↔ ECAS · TLS / mTLS Learning
+# Client ↔ Server · TLS / mTLS Learning
 
+ชื่อใน UI ใช้ Client / Server; ตัวอย่างไฟล์ hostname และ config ยังคงใช้ oneapp / ecas เพื่อให้ตรงกับข้อมูล certificate ตัวอย่างเดิม
 เว็บเรียนรู้ภาษาไทยแบบ frontend-only สำหรับ Developer, Infrastructure, Security, Solution Architect และ QA ใช้ React + TypeScript + Vite, Tailwind CSS, Framer Motion, Lucide และ SVG
 
 ## Run
@@ -22,7 +23,7 @@ npm test
 
 ## Demo guide
 
-1. เริ่มใน Handshake: TLS + Beginner กด Connect to ECAS หรือ Play แล้วใช้ Pause, Previous, Next, Reset เพื่อดูรายละเอียด
+1. เริ่มใน Handshake: TLS + Beginner กด Connect to Server หรือ Play แล้วใช้ Pause, Previous, Next, Reset เพื่อดูรายละเอียด
 2. เปลี่ยนเป็น mTLS เพื่อเห็น Certificate สองทาง และ proof of ownership โดยไม่มี Private Key เดินทางออกจากเจ้าของ
 3. Advanced แยก TLS 1.2 แบบ ECDHE กับ TLS 1.3 ตาม full certificate handshake; Beginner ใช้ conceptual flow 10/14 ขั้น
 4. Certificates & CA: คลิก field, CA หรือ Certificate และ Play validation ทั้ง server/client chain
@@ -48,11 +49,11 @@ npm test
 
 ## Educational boundaries
 
-ทุก Certificate, key และ hostname เป็นข้อมูลสมมติ ใช้เวลา demo 07 October 2026 ไม่มี PEM/key material จริง ไม่มี backend, real TLS handshake หรือการเรียก ECAS HTTP API จริง Font และ UI assets อยู่ใน bundle ไม่ต้องโหลดจาก CDN
+ทุก Certificate, key และ hostname เป็นข้อมูลสมมติ ใช้เวลา demo 07 October 2026 ไม่มี PEM/key material จริง ไม่มี backend, real TLS handshake หรือการเรียก Server HTTP API จริง Font และ UI assets อยู่ใน bundle ไม่ต้องโหลดจาก CDN
 
 - Certificate มี identity และ public key ส่วน Private Key ใช้ลงลายมือชื่อพิสูจน์ ownership; API payload ใช้ symmetric traffic keys
 - Peer ส่ง leaf + intermediate chain; trust anchor มาจาก local Trust Store ชื่อ CA ตรงกันอย่างเดียวไม่สร้าง trust
-- Corporate Root CA มี Company Intermediate CA สำหรับ ECAS และ Company Client CA สำหรับ OneApp ตัวอย่าง ECAS trust root สำหรับ client chain แต่ API authorization เป็น application policy แยก
+- Corporate Root CA มี Company Intermediate CA สำหรับ Server และ Company Client CA สำหรับ Client ตัวอย่าง Server trust root สำหรับ client chain แต่ API authorization เป็น application policy แยก
 - PKCS12 identity ใช้ PrivateKeyEntry ที่มี key กับ certificate chain; trust anchor ใช้ trustedCertEntry
 - "อ่าน store" เป็นภาพอธิบาย KeyManager/TrustManager ที่ใช้ material ใน SSLContext ไม่ใช่การเปิดไฟล์ทุก connection
 - Java examples ใช้ Java 21 / Spring Boot 3.5: SSL Bundle ต้องผูกกับ RestClient จริง; server.ssl ตั้ง HTTPS ขาเข้า ไม่ตั้ง outbound client

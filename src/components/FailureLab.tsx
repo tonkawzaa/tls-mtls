@@ -115,7 +115,7 @@ export function FailureLab({
                   <h2>Secure {mode} Connection Established</h2>
                 </div>
                 <p>
-                  ECAS Trusted ✓ {mode === 'mTLS' ? '· OneApp Trusted ✓' : ''} · API Request Sent ·
+                  Server Trusted ✓ {mode === 'mTLS' ? '· Client Trusted ✓' : ''} · API Request Sent ·
                   API Response Received
                 </p>
               </>
@@ -138,7 +138,7 @@ export function FailureLab({
         </div>
         <aside className="panel conditions-panel">
           <h2>Handshake Conditions</h2>
-          <h3>ECAS Server Certificate</h3>
+          <h3>Server Certificate</h3>
           {serverFields.map((key) => toggle(key))}
           <div className="conditions-divider" />
           <h3>mTLS Client Checks</h3>

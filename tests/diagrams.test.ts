@@ -101,10 +101,10 @@ describe('diagram content', () => {
       chapter: 'certificates',
       certificate: 'clientCert',
     })
-    expect(server.sections[0].title).toContain('OneApp')
+    expect(server.sections[0].title).toContain('Client')
     expect(
       server.sections[1].nodes.find((node) => node.id === 'local-root')?.title,
-    ).toBe('OneApp Trust Store')
+    ).toBe('Client Trust Store')
     const client = buildDiagram({
       ...base,
       chapter: 'certificates',
@@ -113,7 +113,7 @@ describe('diagram content', () => {
     })
     expect(
       client.sections[1].nodes.find((node) => node.id === 'local-root')?.title,
-    ).toBe('ECAS Trust Store')
+    ).toBe('Server Trust Store')
   })
   it('keeps storage material unlinked and adds client authentication only in mTLS architecture', () => {
     const tls = buildDiagram({ ...base, chapter: 'architecture' })
@@ -129,7 +129,7 @@ describe('diagram content', () => {
       ),
     ).toBe(true)
   })
-  it('keeps inbound OneApp server identity separate from ECAS outbound client identity', () => {
+  it('keeps inbound server identity separate from outbound client identity', () => {
     const inbound = nodes({
       ...base,
       chapter: 'java',

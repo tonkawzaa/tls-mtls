@@ -53,3 +53,13 @@ Local macOS workspace at `http://127.0.0.1:5173/`. UI checks used native Safari 
 Automated checks: `npm run build`, `npm run lint`, and `npm test`. The 151 tests across three suites include all chapter/Java popup contexts, both certificate directions, version-specific flows, failure presets and first-blocker precedence, handshake/failure/chain pause and resume, repeated opening, cancel/backdrop/hash closure, focus/scroll restoration, and React StrictMode.
 
 Limits: physical phones/tablets, exact 320/768 CSS-pixel viewports, Firefox, VoiceOver operation, and automated axe checks were not verified. Native screenshots and accessibility observations support the specific interactions above; jsdom tests do not certify native keyboard behavior across browsers.
+
+
+## 08 October 2026 · Client / Server naming
+
+- Renamed visible system names across all five chapters, diagram popups, concept explanations, failure messages, accessible controls, browser title and README. Chain direction labels now read Client → Server / Server → Client; internal direction values remain unchanged.
+- Preserved certificate fixture values, filenames, hostnames, Java identifiers and environment variables. Inbound HTTPS explicitly explains that the app labelled Client serves as an HTTPS Server for incoming requests. AGENTS.md remains unchanged.
+- Automated: `npm run build`, `npm run lint` and `npm test` passed; 151 tests across three suites. Existing tests cover TLS/mTLS, TLS 1.2/1.3, failure gating, playback pause/reset and diagram lifecycle.
+- Native Safari at http://127.0.0.1:5173/: navigated all five chapters and opened/closed each diagram using Escape; inspected all four Java subtabs and their popups. Verified mTLS chain direction Client → Server selects client certificate and Server Trust Store while Certificate Explorer remains independent. Light certificate and dark inbound diagrams rendered with readable names; modal close control received focus.
+- Chrome DevTools iPhone SE emulation, 375×667: header, Connect to Server and diagram button fit; handshake popup renders a vertical flow with Client → Server labels and closes with Escape. Console showed zero visible messages and No Issues during this check. Screenshot evidence was displayed in the session.
+- Limits: no real mobile device or full browser matrix; native Safari console was not inspected. Existing screenshot files document the earlier naming and were retained as historical evidence.

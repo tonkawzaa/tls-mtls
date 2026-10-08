@@ -99,13 +99,13 @@ describe('playback clock', () => {
 describe('workspace interactions', () => {
   it('mode changes reset the clock and replace TLS steps with mTLS; navigation pauses playback', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: 'Connect to ECAS' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Connect to Server' }))
     act(() => vi.advanceTimersByTime(STEP_DURATION * 3))
     const modes = screen.getByRole('group', { name: 'Authentication mode' })
     fireEvent.click(within(modes).getByRole('button', { name: 'mTLS' }))
     expect(screen.getByText('1 / 14')).toBeDefined()
     expect(screen.getByRole('button', { name: 'Play' })).toBeDefined()
-    fireEvent.click(screen.getByRole('button', { name: 'Connect to ECAS' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Connect to Server' }))
     fireEvent.click(screen.getByRole('link', { name: 'Certificates & CA' }))
     act(() => vi.advanceTimersByTime(50000))
     fireEvent.click(screen.getByRole('link', { name: 'Handshake' }))
@@ -119,7 +119,7 @@ describe('workspace interactions', () => {
     expect(
       (
         screen.getByRole('switch', {
-          name: 'OneApp Private Key',
+          name: 'Client Private Key',
         }) as HTMLInputElement
       ).checked,
     ).toBe(false)
@@ -142,7 +142,7 @@ describe('workspace interactions', () => {
     expect(
       (
         screen.getByRole('switch', {
-          name: 'OneApp Private Key',
+          name: 'Client Private Key',
         }) as HTMLInputElement
       ).checked,
     ).toBe(true)
@@ -156,7 +156,7 @@ describe('workspace interactions', () => {
     ).toBeDefined()
     fireEvent.click(
       screen.getByRole('button', {
-        name: /OneApp Private Key Private Key อยู่ใน OneApp/,
+        name: /Client Private Key Private Key อยู่ใน Client/,
       }),
     )
     const dialog = screen.getByRole('dialog') as HTMLDialogElement
@@ -242,28 +242,28 @@ describe('diagram popups', () => {
     open()
     const dialog = within(screen.getByRole('dialog'))
     expect(
-      dialog.getByRole('heading', { name: 'Certificate ที่เลือก · OneApp' }),
+      dialog.getByRole('heading', { name: 'Certificate ที่เลือก · Client' }),
     ).toBeDefined()
     expect(
-      dialog.getByRole('heading', { name: 'Chain validation · ECAS → OneApp' }),
+      dialog.getByRole('heading', { name: 'Chain validation · Server → Client' }),
     ).toBeDefined()
     close()
     fireEvent.click(
       within(screen.getByRole('group', { name: 'Chain direction' })).getByRole(
         'button',
-        { name: 'OneApp → ECAS' },
+        { name: 'Client → Server' },
       ),
     )
     open()
     expect(
       within(screen.getByRole('dialog')).getByRole('heading', {
-        name: 'Chain validation · OneApp → ECAS',
+        name: 'Chain validation · Client → Server',
       }),
     ).toBeDefined()
   })
   it('pauses the handshake in place and keeps it paused until Play', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: 'Connect to ECAS' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Connect to Server' }))
     act(() => vi.advanceTimersByTime(STEP_DURATION + 1000))
     expect(screen.getByText('2 / 10')).toBeDefined()
     open()

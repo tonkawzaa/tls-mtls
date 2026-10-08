@@ -21,7 +21,7 @@ export const chapters: { id: Chapter; title: string; heading: string; subtitle: 
     id: 'handshake',
     title: 'Handshake',
     heading: 'TLS / mTLS Handshake',
-    subtitle: 'ดูการเชื่อมต่อ OneApp กับ ECAS ทีละขั้นตอน',
+    subtitle: 'ดูการเชื่อมต่อ Client กับ Server ทีละขั้นตอน',
   },
   {
     id: 'certificates',
@@ -39,7 +39,7 @@ export const chapters: { id: Chapter; title: string; heading: string; subtitle: 
     id: 'java',
     title: 'Java Configuration',
     heading: 'Spring Boot / Java',
-    subtitle: 'ตั้งค่า HTTPS client ของ OneApp เพื่อเรียก ECAS',
+    subtitle: 'ตั้งค่า HTTPS client ของ Client เพื่อเรียก Server',
   },
   {
     id: 'failures',
@@ -54,32 +54,32 @@ export const concepts: Record<
 > = {
   serverCert: {
     title: 'ecas-server.crt',
-    analogy: 'บัตรประจำตัวของ ECAS',
-    text: 'OneApp ตรวจบัตรของ ECAS ว่าออกโดย CA ที่เชื่อถือได้ ยังไม่หมดอายุ และ SAN ตรงกับ hostname ที่กำลังเรียก',
+    analogy: 'บัตรประจำตัวของ Server',
+    text: 'Client ตรวจบัตรของ Server ว่าออกโดย CA ที่เชื่อถือได้ ยังไม่หมดอายุ และ SAN ตรงกับ hostname ที่กำลังเรียก',
     advanced:
-      'X.509 end-entity certificate · EKU serverAuth · CertificateVerify พิสูจน์ว่า ECAS ครอบครอง private key ที่ตรงกับ public key ใน certificate',
+      'X.509 end-entity certificate · EKU serverAuth · CertificateVerify พิสูจน์ว่า Server ครอบครอง private key ที่ตรงกับ public key ใน certificate',
     color: 'gold',
   },
   clientCert: {
     title: 'oneapp-client.crt',
-    analogy: 'บัตรประจำตัวของ OneApp',
-    text: 'OneApp ส่ง Certificate นี้ให้ ECAS ใน mTLS เพื่อแสดงตัวตน และใช้ Private Key พิสูจน์ว่าเป็นเจ้าของ Certificate',
+    analogy: 'บัตรประจำตัวของ Client',
+    text: 'Client ส่ง Certificate นี้ให้ Server ใน mTLS เพื่อแสดงตัวตน และใช้ Private Key พิสูจน์ว่าเป็นเจ้าของ Certificate',
     advanced:
-      'X.509 client certificate · Subject CN=oneapp · EKU clientAuth · ECAS ตรวจ chain และ proof of possession ก่อนยอมรับ identity',
+      'X.509 client certificate · Subject CN=oneapp · EKU clientAuth · Server ตรวจ chain และ proof of possession ก่อนยอมรับ identity',
     color: 'gold',
   },
   clientPrivate: {
-    title: 'OneApp Private Key',
+    title: 'Client Private Key',
     analogy: 'ลายเซ็นลับของเจ้าของบัตร',
-    text: 'อยู่กับ OneApp เท่านั้น ไม่ส่งไป ECAS ไม่แชร์ และไม่ commit ลง Git ใช้สร้างลายมือชื่อเพื่อพิสูจน์ ownership',
+    text: 'อยู่กับ Client เท่านั้น ไม่ส่งไป Server ไม่แชร์ และไม่ commit ลง Git ใช้สร้างลายมือชื่อเพื่อพิสูจน์ ownership',
     advanced:
-      'CertificateVerify signs the handshake transcript. ECAS ตรวจลายมือชื่อด้วย public key ของ OneApp; private key ไม่ใช่ session key และไม่ได้เข้ารหัส API payload โดยตรง',
+      'CertificateVerify signs the handshake transcript. Server ตรวจลายมือชื่อด้วย public key ของ Client; private key ไม่ใช่ session key และไม่ได้เข้ารหัส API payload โดยตรง',
     color: 'red',
   },
   serverPrivate: {
-    title: 'ECAS Private Key',
-    analogy: 'ลายเซ็นลับของ ECAS',
-    text: 'เก็บใน ECAS เท่านั้น ใช้พิสูจน์ว่า ECAS เป็นเจ้าของ Server Certificate โดยไม่ส่ง Private Key ให้ OneApp',
+    title: 'Server Private Key',
+    analogy: 'ลายเซ็นลับของ Server',
+    text: 'เก็บใน Server เท่านั้น ใช้พิสูจน์ว่า Server เป็นเจ้าของ Server Certificate โดยไม่ส่ง Private Key ให้ Client',
     advanced:
       'TLS 1.3 ใช้ CertificateVerify; TLS 1.2 ECDHE ใช้ signed ServerKeyExchange. Secret key material ไม่ออกจากระบบเจ้าของ',
     color: 'red',
@@ -95,31 +95,31 @@ export const concepts: Record<
   root: {
     title: 'Corporate Root CA',
     analogy: 'หน่วยงานที่เราเลือกเชื่อถือ',
-    text: 'เป็นจุดเริ่มความเชื่อถือที่ติดตั้งไว้ใน Trust Store ไม่ได้เชื่อเพียงเพราะ ECAS ส่งมา หรือเพราะชื่อ Issuer ตรงกัน',
+    text: 'เป็นจุดเริ่มความเชื่อถือที่ติดตั้งไว้ใน Trust Store ไม่ได้เชื่อเพียงเพราะ Server ส่งมา หรือเพราะชื่อ Issuer ตรงกัน',
     advanced:
       'Trust Anchor เป็น local trust decision. การตรวจ chain ต้องตรวจ cryptographic signatures, CA constraints และ validity; CA private key ไม่ถูกส่งในการเชื่อมต่อ',
     color: 'green',
   },
   serverCA: {
     title: 'Company Intermediate CA',
-    analogy: 'หน่วยงานที่ออกบัตรให้ ECAS',
-    text: 'ออก Certificate ให้ ECAS และได้รับการรับรองจาก Corporate Root CA ECAS ส่งใบรับรอง intermediate มาพร้อม Server Certificate',
+    analogy: 'หน่วยงานที่ออกบัตรให้ Server',
+    text: 'ออก Certificate ให้ Server และได้รับการรับรองจาก Corporate Root CA Server ส่งใบรับรอง intermediate มาพร้อม Server Certificate',
     advanced:
       'Issuing CA · Basic Constraints CA=true · keyCertSign. Intermediate ช่วยแยกงาน issuing ออกจาก Root CA และสร้าง path ไปยัง trust anchor',
     color: 'green',
   },
   clientCA: {
     title: 'Company Client CA',
-    analogy: 'หน่วยงานที่ออกบัตรให้ OneApp',
-    text: 'ออก Client Certificate ให้ OneApp และได้รับการรับรองจาก Corporate Root CA ECAS ต้องมี trust anchor ที่ยอมรับ chain นี้',
+    analogy: 'หน่วยงานที่ออกบัตรให้ Client',
+    text: 'ออก Client Certificate ให้ Client และได้รับการรับรองจาก Corporate Root CA Server ต้องมี trust anchor ที่ยอมรับ chain นี้',
     advanced:
-      'Client issuing CA · ECAS ตรวจ clientAuth EKU, chain, validity และ CertificateVerify. ชื่อ CA เพียงอย่างเดียวไม่ใช่หลักฐานความน่าเชื่อถือ',
+      'Client issuing CA · Server ตรวจ clientAuth EKU, chain, validity และ CertificateVerify. ชื่อ CA เพียงอย่างเดียวไม่ใช่หลักฐานความน่าเชื่อถือ',
     color: 'green',
   },
   keyStore: {
     title: 'oneapp-keystore.p12',
     analogy: 'กระเป๋าตัวตนและกุญแจของเรา',
-    text: 'Who I Am — เก็บ OneApp Client Certificate, Private Key และ certificate chain ใช้เมื่อ ECAS ขอ Client Certificate ใน mTLS',
+    text: 'Who I Am — เก็บ Client Certificate, Private Key และ certificate chain ใช้เมื่อ Server ขอ Client Certificate ใน mTLS',
     advanced:
       'PKCS12 PrivateKeyEntry ผูก private key กับ leaf certificate และ chain ผ่าน alias; ไม่ใช่แค่ถุงรวมไฟล์ .crt/.key · KeyManager เลือก identity ที่ใช้',
     color: 'gold',
@@ -127,23 +127,23 @@ export const concepts: Record<
   trustStore: {
     title: 'oneapp-truststore.p12',
     analogy: 'รายชื่อหน่วยงานที่เราเชื่อถือ',
-    text: 'Who I Trust — เก็บ Corporate Root CA สำหรับตรวจ Certificate chain ของ ECAS ไม่ต้องเก็บ Private Key ของ ECAS',
+    text: 'Who I Trust — เก็บ Corporate Root CA สำหรับตรวจ Certificate chain ของ Server ไม่ต้องเก็บ Private Key ของ Server',
     advanced:
       'PKCS12 trustedCertEntry · TrustManager ตรวจ peer chain กับ trust anchors. Material ถูกโหลดเข้ากับ SSLContext; ภาพเปิด store เป็นการอธิบายเชิงแนวคิด',
     color: 'green',
   },
   ecasTrustStore: {
-    title: 'ECAS Trust Store',
-    analogy: 'รายชื่อหน่วยงานที่ ECAS เชื่อถือ',
-    text: 'เก็บ trusted root สำหรับ Client CA ของ OneApp เพื่อให้ ECAS ตรวจ identity ของ OneApp ใน mTLS',
+    title: 'Server Trust Store',
+    analogy: 'รายชื่อหน่วยงานที่ Server เชื่อถือ',
+    text: 'เก็บ trusted root สำหรับ Client CA ของ Client เพื่อให้ Server ตรวจ identity ของ Client ใน mTLS',
     advanced:
       'ตัวอย่างใช้ Corporate Root CA เป็น anchor สำหรับ Company Client CA. การ trust CA ยืนยัน identity แต่สิทธิ์ API ต้องมี authorization policy แยกต่างหาก',
     color: 'green',
   },
   ecasKeyStore: {
-    title: 'ECAS Key Store',
-    analogy: 'กระเป๋าตัวตนของ ECAS',
-    text: 'เก็บ Server Certificate, ECAS Private Key และ intermediate chain สำหรับยืนยัน ECAS กับ OneApp',
+    title: 'Server Key Store',
+    analogy: 'กระเป๋าตัวตนของ Server',
+    text: 'เก็บ Server Certificate, Server Private Key และ intermediate chain สำหรับยืนยัน Server กับ Client',
     advanced:
       'Server identity อาจเก็บเป็น PKCS12, PEM หรือ hardware-backed key ขึ้นกับ TLS server. สิ่งสำคัญคือ private key ตรงกับ leaf certificate',
     color: 'gold',
@@ -196,8 +196,8 @@ export const certificates: Record<CertificateId, Record<CertificateField, string
 }
 export const fieldDescriptions: Record<CertificateField, string> = {
   Subject:
-    'ตัวตนที่ใบรับรองระบุไว้ เช่น CN=oneapp หรือ ECAS แต่การตรวจ hostname ของ HTTPS ต้องตรวจ SAN ไม่ใช่อาศัย CN เพียงอย่างเดียว',
-  SAN: 'Subject Alternative Name: OneApp ต้องตรวจว่า hostname ecas.example.internal อยู่ใน DNS SAN ของ ECAS ส่วน Client Certificate ใช้ระบุตัวตนตาม policy ไม่ตรวจ hostname แบบ server',
+    'ตัวตนที่ใบรับรองระบุไว้ เช่น CN=oneapp หรือ Server แต่การตรวจ hostname ของ HTTPS ต้องตรวจ SAN ไม่ใช่อาศัย CN เพียงอย่างเดียว',
+  SAN: 'Subject Alternative Name: Client ต้องตรวจว่า hostname ecas.example.internal อยู่ใน DNS SAN ของ Server ส่วน Client Certificate ใช้ระบุตัวตนตาม policy ไม่ตรวจ hostname แบบ server',
   Issuer:
     'CA ที่ลงลายมือชื่อออก Certificate นี้ ต้องตรวจลายมือชื่อและ chain ต่อไปถึง trust anchor ไม่ใช่เทียบชื่อ CA แล้วเชื่อทันที',
   'Serial Number':
@@ -210,5 +210,5 @@ export const fieldDescriptions: Record<CertificateField, string> = {
   'Signature Algorithm':
     'อัลกอริทึมที่ issuer ใช้ลงลายมือชื่อ Certificate ไม่ใช่ TLS cipher suite และไม่ใช่ session encryption algorithm',
   'Extended Key Usage':
-    'กำหนดวัตถุประสงค์: serverAuth สำหรับ ECAS และ clientAuth สำหรับ OneApp แม้ chain เชื่อถือได้ ก็ต้องใช้ certificate ให้ตรงงาน',
+    'กำหนดวัตถุประสงค์: serverAuth สำหรับ Server และ clientAuth สำหรับ Client แม้ chain เชื่อถือได้ ก็ต้องใช้ certificate ให้ตรงงาน',
 }

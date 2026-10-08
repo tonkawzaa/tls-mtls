@@ -82,11 +82,11 @@ export function ConnectionDiagram({
     >
       <div className="verification-caption">
         <span>
-          <ShieldCheck size={18} /> OneApp verifies ECAS
+          <ShieldCheck size={18} /> Client verifies Server
         </span>
         {mode === 'mTLS' ? (
           <span>
-            <ShieldCheck size={18} /> ECAS verifies OneApp
+            <ShieldCheck size={18} /> Server verifies Client
           </span>
         ) : null}
       </div>
@@ -152,22 +152,22 @@ export function ConnectionDiagram({
           className="server-glyph"
           type="button"
           onClick={() => inspect(mode === 'mTLS' ? 'keyStore' : 'trustStore')}
-          aria-label="Inspect OneApp Server"
+          aria-label="Inspect Client"
         >
           <Server strokeWidth={1.6} />
         </button>
-        <strong>ONEAPP SERVER</strong>
+        <strong>Client</strong>
         <span>HTTPS Client</span>
         {ecTrusted ? (
           <span className="node-trust">
-            <Check size={14} /> ECAS Trusted
+            <Check size={14} /> Server Trusted
           </span>
         ) : null}
         <ConceptNode
           id="trustStore"
           inspect={inspect}
           label="truststore.p12"
-          detail="ECAS Root CA"
+          detail="Server Root CA"
           className={
             ['trust', 'chain', 'serverValidate'].includes(current.phase) ? 'active-node' : ''
           }
@@ -178,22 +178,22 @@ export function ConnectionDiagram({
           className="server-glyph"
           type="button"
           onClick={() => inspect('serverCert')}
-          aria-label="Inspect ECAS Server"
+          aria-label="Inspect Server"
         >
           <Server strokeWidth={1.6} />
         </button>
-        <strong>ECAS SERVER</strong>
+        <strong>Server</strong>
         <span>HTTPS Server</span>
         {oneTrusted ? (
           <span className="node-trust">
-            <Check size={14} /> OneApp Trusted
+            <Check size={14} /> Client Trusted
           </span>
         ) : null}
         {mode === 'mTLS' ? (
           <ConceptNode
             id="ecasTrustStore"
             inspect={inspect}
-            label="ECAS Trust Store"
+            label="Server Trust Store"
             detail="Trusted Client CA"
             className={current.phase === 'clientValidate' ? 'active-node' : ''}
           />
@@ -231,7 +231,7 @@ export function ConnectionDiagram({
             <FileBadge size={certificate ? 36 : 23} />
             <strong>{displayed.artifact}</strong>
           </button>
-          <small>{displayed.direction === 'toServer' ? 'OneApp → ECAS' : 'ECAS → OneApp'}</small>
+          <small>{displayed.direction === 'toServer' ? 'Client → Server' : 'Server → Client'}</small>
         </motion.div>
       ) : null}
       {failure ? (
@@ -242,7 +242,7 @@ export function ConnectionDiagram({
         </div>
       ) : null}
       {state.status === 'idle' ? (
-        <div className="diagram-ready">พร้อมเชื่อมต่อ · กด Play หรือ Connect to ECAS</div>
+        <div className="diagram-ready">พร้อมเชื่อมต่อ · กด Play หรือ Connect to Server</div>
       ) : null}
     </div>
   )
@@ -326,7 +326,7 @@ function StepInspector({
       <h2>{complete ? 'API Response Received' : current.title}</h2>
       <p>
         {complete
-          ? 'OneApp และ ECAS สื่อสารผ่าน encrypted connection สำเร็จแล้ว'
+          ? 'Client และ Server สื่อสารผ่าน encrypted connection สำเร็จแล้ว'
           : current.description}
       </p>
       {current.concept ? (
@@ -351,8 +351,8 @@ function StepInspector({
           <strong>นึกภาพง่าย ๆ</strong>
           <p>
             {mode === 'TLS'
-              ? 'OneApp รับบัตรของ ECAS แล้วตรวจว่าผู้ออกบัตรอยู่ในรายชื่อที่เชื่อถือหรือไม่'
-              : 'OneApp ตรวจบัตรของ ECAS และ ECAS ก็ตรวจบัตรของ OneApp ด้วย'}
+              ? 'Client รับบัตรของ Server แล้วตรวจว่าผู้ออกบัตรอยู่ในรายชื่อที่เชื่อถือหรือไม่'
+              : 'Client ตรวจบัตรของ Server และ Server ก็ตรวจบัตรของ Client ด้วย'}
           </p>
         </Note>
       ) : (
@@ -414,7 +414,7 @@ export function HandshakeChapter({
             ? 'Conceptual flow · ลำดับย่อเพื่อการเรียนรู้'
             : `Full TLS ${protocol} certificate handshake · ${protocol === '1.2' ? 'ECDHE' : 'ECDHE + HKDF'}`}
         </span>
-        <span>ตัวอย่างจำลอง · ไม่มีการเรียก ECAS จริง</span>
+        <span>ตัวอย่างจำลอง · ไม่มีการเรียก Server จริง</span>
       </div>
       <ApplicationFlow controller={controller} mode={mode} />
       <Summary inspect={inspect} />
@@ -450,17 +450,17 @@ function ApplicationFlow({ controller, mode }: { controller: HandshakeController
         </div>
       </div>
       <div className={`request-flow ${secure ? 'request-enabled' : ''}`}>
-        <span className="blue">OneApp</span>
+        <span className="blue">Client</span>
         <span>
           <ArrowRight size={16} /> POST /ecas/api/... <ArrowLeft size={16} /> HTTPS Response
         </span>
-        <span className="purple">ECAS</span>
+        <span className="purple">Server</span>
       </div>
       <Note tone={secure ? 'green' : 'slate'}>
         {secure ? (
           <>
             <strong>Secure {mode} Connection Established</strong> — request/response ใช้ application
-            traffic keys; ECAS ตรวจสิทธิ์และประมวลผล API ใน Application Layer
+            traffic keys; Server ตรวจสิทธิ์และประมวลผล API ใน Application Layer
           </>
         ) : (
           'API ยังไม่ถูกส่ง · ต้องสร้าง Secure Connection สำเร็จก่อน'
@@ -476,20 +476,20 @@ function Summary({ inspect }: { inspect: Inspect }) {
       <div className="summary-comparison">
         <div>
           <strong>TLS</strong>
-          <span className="blue">OneApp</span>
+          <span className="blue">Client</span>
           <ArrowRight />
-          <span className="purple">ECAS</span>
-          <p>OneApp verifies ECAS</p>
+          <span className="purple">Server</span>
+          <p>Client verifies Server</p>
         </div>
         <div>
           <strong>mTLS</strong>
-          <span className="blue">OneApp</span>
+          <span className="blue">Client</span>
           <span className="mutual-arrows">
             <ArrowRight />
             <ArrowLeft />
           </span>
-          <span className="purple">ECAS</span>
-          <p>OneApp verifies ECAS + ECAS verifies OneApp</p>
+          <span className="purple">Server</span>
+          <p>Client verifies Server + Server verifies Client</p>
         </div>
       </div>
       <div className="mnemonics">

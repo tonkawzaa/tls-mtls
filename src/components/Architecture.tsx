@@ -25,13 +25,13 @@ export function ArchitectureChapter({
           <div>
             <ConceptNode id="clientCA" inspect={inspect} />
             <span>
-              <ArrowDown size={18} /> ออก Client Certificate ให้ OneApp
+              <ArrowDown size={18} /> ออก Client Certificate ให้ Client
             </span>
           </div>
           <div>
             <ConceptNode id="serverCA" inspect={inspect} />
             <span>
-              <ArrowDown size={18} /> ออก Server Certificate ให้ ECAS
+              <ArrowDown size={18} /> ออก Server Certificate ให้ Server
             </span>
           </div>
         </div>
@@ -40,7 +40,7 @@ export function ArchitectureChapter({
             <header>
               <Server />
               <div>
-                <h2>ONEAPP SERVER</h2>
+                <h2>Client</h2>
                 <span>Spring Boot · HTTPS Client</span>
               </div>
             </header>
@@ -52,7 +52,7 @@ export function ArchitectureChapter({
                   id="clientPrivate"
                   inspect={inspect}
                   label="oneapp-private.key"
-                  detail="Private Key · อยู่ใน OneApp"
+                  detail="Private Key · อยู่ใน Client"
                 />
                 <ConceptNode id="clientCA" inspect={inspect} label="client-intermediate-ca.crt" />
               </div>
@@ -65,7 +65,7 @@ export function ArchitectureChapter({
               <ConceptNode
                 id="root"
                 inspect={inspect}
-                label="ECAS Root CA"
+                label="Server Root CA"
                 detail="Corporate Root CA · Trust anchor"
               />
             </div>
@@ -87,13 +87,13 @@ export function ArchitectureChapter({
             </div>
             <div className="architecture-verifications">
               <Note tone="green" icon={ShieldCheck}>
-                <strong>OneApp Trust Store</strong>
-                <p>verifies ECAS Certificate</p>
+                <strong>Client Trust Store</strong>
+                <p>verifies Server Certificate</p>
               </Note>
               {mode === 'mTLS' ? (
                 <Note tone="green" icon={ShieldCheck}>
-                  <strong>ECAS Trust Store</strong>
-                  <p>verifies OneApp Certificate</p>
+                  <strong>Server Trust Store</strong>
+                  <p>verifies Client Certificate</p>
                 </Note>
               ) : null}
             </div>
@@ -103,7 +103,7 @@ export function ArchitectureChapter({
             <header>
               <Server />
               <div>
-                <h2>ECAS SERVER</h2>
+                <h2>Server</h2>
                 <span>HTTPS Server</span>
               </div>
             </header>
@@ -115,7 +115,7 @@ export function ArchitectureChapter({
                   id="serverPrivate"
                   inspect={inspect}
                   label="ecas-private.key"
-                  detail="Private Key · อยู่ใน ECAS"
+                  detail="Private Key · อยู่ใน Server"
                 />
                 <ConceptNode id="serverCA" inspect={inspect} label="server-intermediate-ca.crt" />
               </div>
@@ -160,7 +160,7 @@ export function ArchitectureChapter({
           <ConceptNode
             id="trustStore"
             inspect={inspect}
-            detail="Corporate Root CA สำหรับตรวจ ECAS"
+            detail="Corporate Root CA สำหรับตรวจ Server"
           />
           {level === 'Advanced' ? (
             <code>trustedCertEntry → trusted CA certificate</code>
